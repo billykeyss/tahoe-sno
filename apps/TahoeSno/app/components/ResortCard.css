@@ -1,0 +1,214 @@
+.resort-card {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 16px;
+  padding: 1.5rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.resort-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+}
+
+.resort-card.loading {
+  cursor: default;
+}
+
+.resort-card.error {
+  background: rgba(255, 0, 0, 0.1);
+  color: #e74c3c;
+  cursor: default;
+}
+
+.resort-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1.5rem;
+}
+
+.resort-name {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #2c3e50;
+  margin: 0;
+  flex: 1;
+}
+
+.weather-summary {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.25rem;
+}
+
+.weather-desc {
+  font-size: 0.9rem;
+  color: #7f8c8d;
+  font-weight: 500;
+}
+
+.current-temp {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #3498db;
+}
+
+.snow-data {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.snow-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem;
+  background: rgba(52, 152, 219, 0.1);
+  border-radius: 8px;
+  border: 1px solid rgba(52, 152, 219, 0.2);
+}
+
+.snow-item .label {
+  font-size: 0.8rem;
+  color: #7f8c8d;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+.snow-item .value {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #2c3e50;
+}
+
+.forecast-mini {
+  margin-bottom: 1.5rem;
+}
+
+.forecast-mini h4 {
+  font-size: 1rem;
+  color: #2c3e50;
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+
+.forecast-days {
+  display: flex;
+  gap: 0.5rem;
+  overflow-x: auto;
+}
+
+.forecast-day {
+  flex: 1;
+  min-width: 60px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0.75rem 0.5rem;
+  background: rgba(149, 165, 166, 0.1);
+  border-radius: 8px;
+  font-size: 0.8rem;
+}
+
+.day-label {
+  color: #7f8c8d;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+}
+
+.day-temp {
+  color: #2c3e50;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+
+.day-snow {
+  color: #3498db;
+  font-weight: 600;
+  font-size: 0.75rem;
+}
+
+.resort-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  font-size: 0.9rem;
+  color: #7f8c8d;
+}
+
+.elevation-info {
+  display: flex;
+  gap: 1rem;
+}
+
+.wind-info {
+  font-weight: 500;
+}
+
+/* Loading shimmer effect */
+.loading-shimmer {
+  animation: shimmer 1.5s ease-in-out infinite;
+}
+
+.shimmer-title {
+  height: 24px;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  border-radius: 4px;
+  margin-bottom: 1rem;
+}
+
+.shimmer-content {
+  height: 120px;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  border-radius: 4px;
+}
+
+@keyframes shimmer {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+/* Responsive design */
+@media (max-width: 480px) {
+  .resort-card {
+    padding: 1rem;
+  }
+
+  .resort-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .weather-summary {
+    flex-direction: row;
+    gap: 1rem;
+  }
+
+  .snow-data {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+
+  .elevation-info {
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+}
