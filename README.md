@@ -1,82 +1,161 @@
-# TahoeSno
+# TahoeSno - Lake Tahoe Ski Resort Dashboard
 
-<a alt="Nx logo" href="https://nx.dev" target="_blank" rel="noreferrer"><img src="https://raw.githubusercontent.com/nrwl/nx/master/images/nx-logo.png" width="45"></a>
+A comprehensive ski conditions dashboard for Lake Tahoe resorts with real-time weather data, avalanche conditions, and travel information.
 
-✨ Your new, shiny [Nx workspace](https://nx.dev) is almost ready ✨.
+Built with React Router 7, TypeScript, and Nx in a single-project configuration.
 
-[Learn more about this workspace setup and its capabilities](https://nx.dev/getting-started/tutorials/react-monorepo-tutorial?utm_source=nx_project&amp;utm_medium=readme&amp;utm_campaign=nx_projects) or run `npx nx graph` to visually explore what was created. Now, let's get you up to speed!
+## Features
 
-## Finish your remote caching setup
+- **Resort Weather**: Real-time conditions for 10 Lake Tahoe ski resorts
+- **Snow Data**: 24-hour fresh snow, 7-day totals, base/summit depths
+- **5-Day Forecast**: Weather icons and snow predictions
+- **Historical Snow**: 7-day snowfall chart visualization
+- **Avalanche Danger**: Sierra Avalanche Center danger ratings and problems
+- **Chain Controls**: I-80, US-50, SR-89 chain requirement status
+- **Auto-refresh**: Data updates every 15-60 minutes
 
-[Click here to finish setting up your workspace!](https://cloud.nx.app/connect/QEaggodDXo)
+## API Setup
 
+### Primary APIs (No Keys Required - FREE!)
 
-## Run tasks
+- **Open-Meteo**: Primary weather API for all resort data
+- **Sierra Avalanche Center**: RSS feed for avalanche conditions
+- **Caltrans QuickMap**: JSON API for chain control status
 
-To run the dev server for your app, use:
+### Optional: WeatherUnlocked (Premium Weather Data)
 
-```sh
-npx nx serve TahoeSno
+If you want enhanced ski-specific data (base depths, lift status), you can optionally add WeatherUnlocked:
+
+1. Sign up at [WeatherUnlocked Developer Portal](https://developer.weatherunlocked.com/)
+2. Get your App ID and App Key
+3. Create `.env` file in the root:
+
+```
+VITE_WEATHER_UNLOCKED_APP_ID=your_app_id_here
+VITE_WEATHER_UNLOCKED_APP_KEY=your_app_key_here
 ```
 
-To create a production bundle:
+**Note**: The app works great without any API keys using Open-Meteo!
 
-```sh
-npx nx build TahoeSno
+## Development
+
+```bash
+# Install dependencies
+npm install
+
+# Start development server (no API keys needed!)
+npm run dev
+
+# Build for production
+npm run build
+
+# Preview production build
+npm run start
+
+# Run tests
+npm run test
+
+# Lint code
+npm run lint
 ```
 
-To see all available targets to run for a project, run:
+## Deployment on Render
 
-```sh
-npx nx show project TahoeSno
+### Via Render Dashboard:
+
+1. **Connect Repository**:
+
+   - Go to [Render Dashboard](https://dashboard.render.com/)
+   - Click "New" → "Web Service"
+   - Connect your GitHub repository
+
+2. **Configure Build Settings**:
+
+   - **Name**: `TahoeSno` (or your preferred name)
+   - **Branch**: `main`
+   - **Root Directory**: Leave empty (uses root)
+   - **Runtime**: `Node`
+   - **Build Command**: `npm run build`
+   - **Start Command**: `npm run start`
+   - **Publish Directory**: `build` (React Router 7 builds to build/ directory)
+
+3. **Environment Variables** (optional):
+
+   - Add `VITE_WEATHER_UNLOCKED_APP_ID` if you have WeatherUnlocked keys
+   - Add `VITE_WEATHER_UNLOCKED_APP_KEY` if you have WeatherUnlocked keys
+
+4. **Advanced Settings**:
+   - **Node Version**: `18` or `20`
+   - **Auto-Deploy**: `Yes`
+
+### Via render.yaml (Infrastructure as Code):
+
+Create a `render.yaml` file in your root directory:
+
+```yaml
+services:
+  - type: web
+    name: TahoeSno
+    runtime: node
+    plan: free
+    buildCommand: npm run build
+    startCommand: npm run start
+    envVars:
+      - key: NODE_VERSION
+        value: '20'
 ```
 
-These targets are either [inferred automatically](https://nx.dev/concepts/inferred-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) or defined in the `project.json` or `package.json` files.
+## Project Structure
 
-[More about running tasks in the docs &raquo;](https://nx.dev/features/run-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-## Add new projects
-
-While you could add new projects to your workspace manually, you might want to leverage [Nx plugins](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) and their [code generation](https://nx.dev/features/generate-code?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) feature.
-
-Use the plugin's generator to create new projects.
-
-To generate a new application, use:
-
-```sh
-npx nx g @nx/react:app demo
+```
+/
+├── app/                    # React Router 7 app source
+│   ├── components/         # React components
+│   ├── services/          # API client and services
+│   └── routes/            # React Router 7 routes
+├── public/                # Static assets
+├── build/                 # Production build output
+├── dist/                  # Alternative build output (unused)
+├── tests/                 # Test files
+├── tsconfig.json          # TypeScript configuration
+├── vite.config.ts         # Vite configuration
+├── react-router.config.ts # React Router 7 configuration
+└── project.json           # Nx project configuration
 ```
 
-To generate a new library, use:
+## Resort Coverage
 
-```sh
-npx nx g @nx/react:lib mylib
-```
+- Palisades Tahoe (39.1969, -120.2357)
+- Alpine Meadows (39.1566, -120.2269)
+- Northstar California (39.2734, -120.1218)
+- Heavenly (38.9359, -119.9391)
+- Kirkwood (38.6867, -120.0658)
+- Sierra-at-Tahoe (38.7928, -120.0908)
+- Homewood (39.0831, -120.1664)
+- Diamond Peak (39.2549, -119.9230)
+- Mt Rose (39.3181, -119.8862)
+- Sugar Bowl (39.3016, -120.3663)
 
-You can use `npx nx list` to get a list of installed plugins. Then, run `npx nx list <plugin-name>` to learn about more specific capabilities of a particular plugin. Alternatively, [install Nx Console](https://nx.dev/getting-started/editor-setup?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) to browse plugins and generators in your IDE.
+## Data Sources
 
-[Learn more about Nx plugins &raquo;](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) | [Browse the plugin registry &raquo;](https://nx.dev/plugin-registry?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+- **Weather**: Open-Meteo API (free, reliable, CORS-friendly)
+- **Avalanche**: Sierra Avalanche Center RSS (updates 6AM daily)
+- **Travel**: Caltrans QuickMap JSON (updates every 15 minutes)
+- **Coordinates**: Accurate lat/lon for each resort
 
+## Architecture
 
-[Learn more about Nx on CI](https://nx.dev/ci/intro/ci-with-nx#ready-get-started-with-your-provider?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+- **Frontend**: React 19 + TypeScript + React Router 7
+- **API Client**: Centralized `apiClient.ts` with error handling
+- **Styling**: Modern glassmorphism design with CSS modules
+- **Build**: Nx single-project with Vite and React Router 7
+- **SSR**: Server-side rendering enabled
 
-## Install Nx Console
+## Error Handling
 
-Nx Console is an editor extension that enriches your developer experience. It lets you run tasks, generate code, and improves code autocompletion in your IDE. It is available for VSCode and IntelliJ.
+The app gracefully handles API failures:
 
-[Install Nx Console &raquo;](https://nx.dev/getting-started/editor-setup?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-## Useful links
-
-Learn more:
-
-- [Learn more about this workspace setup](https://nx.dev/getting-started/tutorials/react-monorepo-tutorial?utm_source=nx_project&amp;utm_medium=readme&amp;utm_campaign=nx_projects)
-- [Learn about Nx on CI](https://nx.dev/ci/intro/ci-with-nx?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Releasing Packages with Nx release](https://nx.dev/features/manage-releases?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [What are Nx plugins?](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-And join the Nx community:
-- [Discord](https://go.nx.dev/community)
-- [Follow us on X](https://twitter.com/nxdevtools) or [LinkedIn](https://www.linkedin.com/company/nrwl)
-- [Our Youtube channel](https://www.youtube.com/@nxdevtools)
-- [Our blog](https://nx.dev/blog?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+- Open-Meteo → Mock data fallback if needed
+- Network errors → Mock data with error indicators
+- Loading states with shimmer animations
+- CORS-friendly APIs for development

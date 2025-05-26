@@ -16,6 +16,8 @@ node_modules
 *.launch
 .settings/
 *.sublime-workspace
+build/
+.react-router/
 
 # IDE - VSCode
 .vscode/*

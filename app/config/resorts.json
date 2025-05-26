@@ -1,0 +1,427 @@
+{
+  "resorts": [
+    {
+      "id": "palisades",
+      "name": "Palisades Tahoe",
+      "weatherUnlockedId": 552678,
+      "elevation": { "base": 6200, "summit": 9050 },
+      "coordinates": { "lat": 39.1969, "lon": -120.2357 },
+      "region": "North Lake Tahoe",
+      "status": "active"
+    },
+    {
+      "id": "alpine",
+      "name": "Alpine Meadows",
+      "weatherUnlockedId": 552679,
+      "elevation": { "base": 6835, "summit": 8637 },
+      "coordinates": { "lat": 39.1566, "lon": -120.2269 },
+      "region": "North Lake Tahoe",
+      "status": "active"
+    },
+    {
+      "id": "northstar",
+      "name": "Northstar California",
+      "weatherUnlockedId": 552681,
+      "elevation": { "base": 6330, "summit": 8610 },
+      "coordinates": { "lat": 39.2734, "lon": -120.1218 },
+      "region": "North Lake Tahoe",
+      "status": "active"
+    },
+    {
+      "id": "heavenly",
+      "name": "Heavenly",
+      "weatherUnlockedId": 552697,
+      "elevation": { "base": 6540, "summit": 10067 },
+      "coordinates": { "lat": 38.9359, "lon": -119.9391 },
+      "region": "South Lake Tahoe",
+      "status": "active"
+    },
+    {
+      "id": "kirkwood",
+      "name": "Kirkwood",
+      "weatherUnlockedId": 552690,
+      "elevation": { "base": 7800, "summit": 9800 },
+      "coordinates": { "lat": 38.6867, "lon": -120.0658 },
+      "region": "South Lake Tahoe",
+      "status": "active"
+    },
+    {
+      "id": "sierra",
+      "name": "Sierra-at-Tahoe",
+      "weatherUnlockedId": 552702,
+      "elevation": { "base": 6640, "summit": 8852 },
+      "coordinates": { "lat": 38.7928, "lon": -120.0908 },
+      "region": "South Lake Tahoe",
+      "status": "active"
+    },
+    {
+      "id": "homewood",
+      "name": "Homewood",
+      "weatherUnlockedId": 552688,
+      "elevation": { "base": 6230, "summit": 7880 },
+      "coordinates": { "lat": 39.0831, "lon": -120.1664 },
+      "region": "West Shore",
+      "status": "active"
+    },
+    {
+      "id": "diamond",
+      "name": "Diamond Peak",
+      "weatherUnlockedId": 552683,
+      "elevation": { "base": 6700, "summit": 8540 },
+      "coordinates": { "lat": 39.2549, "lon": -119.923 },
+      "region": "North Lake Tahoe",
+      "status": "active"
+    },
+    {
+      "id": "mtrose",
+      "name": "Mt Rose",
+      "weatherUnlockedId": 552695,
+      "elevation": { "base": 8260, "summit": 9700 },
+      "coordinates": { "lat": 39.3181, "lon": -119.8862 },
+      "region": "North Lake Tahoe",
+      "status": "active"
+    },
+    {
+      "id": "sugarbowl",
+      "name": "Sugar Bowl",
+      "weatherUnlockedId": 552704,
+      "elevation": { "base": 6883, "summit": 8383 },
+      "coordinates": { "lat": 39.3016, "lon": -120.3663 },
+      "region": "North Lake Tahoe",
+      "status": "active"
+    },
+    {
+      "id": "boreal",
+      "name": "Boreal Mountain",
+      "weatherUnlockedId": 552705,
+      "elevation": { "base": 7200, "summit": 7700 },
+      "coordinates": { "lat": 39.3323, "lon": -120.3481 },
+      "region": "North Lake Tahoe",
+      "status": "active"
+    },
+    {
+      "id": "soda",
+      "name": "Soda Springs",
+      "weatherUnlockedId": 552706,
+      "elevation": { "base": 6700, "summit": 7352 },
+      "coordinates": { "lat": 39.3197, "lon": -120.3644 },
+      "region": "North Lake Tahoe",
+      "status": "active"
+    },
+    {
+      "id": "donner",
+      "name": "Donner Ski Ranch",
+      "weatherUnlockedId": 552707,
+      "elevation": { "base": 7031, "summit": 7781 },
+      "coordinates": { "lat": 39.3244, "lon": -120.3258 },
+      "region": "North Lake Tahoe",
+      "status": "active"
+    },
+    {
+      "id": "tahoedonner",
+      "name": "Tahoe Donner",
+      "weatherUnlockedId": 552708,
+      "elevation": { "base": 6750, "summit": 7350 },
+      "coordinates": { "lat": 39.3167, "lon": -120.2333 },
+      "region": "North Lake Tahoe",
+      "status": "active"
+    },
+    {
+      "id": "granlibakken",
+      "name": "Granlibakken",
+      "weatherUnlockedId": 552709,
+      "elevation": { "base": 6330, "summit": 6597 },
+      "coordinates": { "lat": 39.1833, "lon": -120.1333 },
+      "region": "North Lake Tahoe",
+      "status": "active"
+    },
+    {
+      "id": "squawcreek",
+      "name": "Resort at Squaw Creek",
+      "weatherUnlockedId": 552710,
+      "elevation": { "base": 6200, "summit": 6400 },
+      "coordinates": { "lat": 39.1975, "lon": -120.2344 },
+      "region": "North Lake Tahoe",
+      "status": "active"
+    },
+    {
+      "id": "mammoth",
+      "name": "Mammoth Mountain",
+      "weatherUnlockedId": 552720,
+      "elevation": { "base": 7953, "summit": 11053 },
+      "coordinates": { "lat": 37.6308, "lon": -119.0326 },
+      "region": "Eastern Sierra",
+      "status": "active"
+    },
+    {
+      "id": "june",
+      "name": "June Mountain",
+      "weatherUnlockedId": 552721,
+      "elevation": { "base": 7545, "summit": 10174 },
+      "coordinates": { "lat": 37.7647, "lon": -119.0775 },
+      "region": "Eastern Sierra",
+      "status": "active"
+    },
+    {
+      "id": "bear",
+      "name": "Bear Valley",
+      "weatherUnlockedId": 552730,
+      "elevation": { "base": 6600, "summit": 8500 },
+      "coordinates": { "lat": 38.4961, "lon": -120.0306 },
+      "region": "Central Sierra",
+      "status": "active"
+    },
+    {
+      "id": "dodge",
+      "name": "Dodge Ridge",
+      "weatherUnlockedId": 552731,
+      "elevation": { "base": 6600, "summit": 8200 },
+      "coordinates": { "lat": 38.3744, "lon": -120.0533 },
+      "region": "Central Sierra",
+      "status": "active"
+    },
+    {
+      "id": "badger",
+      "name": "Badger Pass",
+      "weatherUnlockedId": 552732,
+      "elevation": { "base": 7200, "summit": 8000 },
+      "coordinates": { "lat": 37.6647, "lon": -119.6647 },
+      "region": "Yosemite",
+      "status": "active"
+    },
+    {
+      "id": "chinapeakx",
+      "name": "China Peak",
+      "weatherUnlockedId": 552733,
+      "elevation": { "base": 7027, "summit": 8709 },
+      "coordinates": { "lat": 37.2997, "lon": -119.1833 },
+      "region": "Central Sierra",
+      "status": "active"
+    },
+    {
+      "id": "mthigh",
+      "name": "Mountain High",
+      "weatherUnlockedId": 552740,
+      "elevation": { "base": 6600, "summit": 8200 },
+      "coordinates": { "lat": 34.3814, "lon": -117.6864 },
+      "region": "Southern California",
+      "status": "active"
+    },
+    {
+      "id": "baldy",
+      "name": "Mt Baldy",
+      "weatherUnlockedId": 552741,
+      "elevation": { "base": 6500, "summit": 8600 },
+      "coordinates": { "lat": 34.2656, "lon": -117.6431 },
+      "region": "Southern California",
+      "status": "active"
+    },
+    {
+      "id": "snowvalley",
+      "name": "Snow Valley",
+      "weatherUnlockedId": 552742,
+      "elevation": { "base": 6800, "summit": 7841 },
+      "coordinates": { "lat": 34.2372, "lon": -117.0286 },
+      "region": "Southern California",
+      "status": "active"
+    },
+    {
+      "id": "snowsummit",
+      "name": "Snow Summit",
+      "weatherUnlockedId": 552743,
+      "elevation": { "base": 7000, "summit": 8200 },
+      "coordinates": { "lat": 34.2333, "lon": -116.9167 },
+      "region": "Southern California",
+      "status": "active"
+    },
+    {
+      "id": "bigbear",
+      "name": "Big Bear Mountain",
+      "weatherUnlockedId": 552744,
+      "elevation": { "base": 7140, "summit": 8805 },
+      "coordinates": { "lat": 34.2239, "lon": -116.9103 },
+      "region": "Southern California",
+      "status": "active"
+    },
+    {
+      "id": "whistler",
+      "name": "Whistler Blackcomb",
+      "weatherUnlockedId": 552800,
+      "elevation": { "base": 2214, "summit": 7494 },
+      "coordinates": { "lat": 50.1163, "lon": -122.9574 },
+      "region": "Sea-to-Sky",
+      "status": "active",
+      "country": "canada"
+    },
+    {
+      "id": "grouse",
+      "name": "Grouse Mountain",
+      "weatherUnlockedId": 552801,
+      "elevation": { "base": 2800, "summit": 3700 },
+      "coordinates": { "lat": 49.3742, "lon": -123.0784 },
+      "region": "North Vancouver",
+      "status": "active",
+      "country": "canada"
+    },
+    {
+      "id": "cypress",
+      "name": "Cypress Mountain",
+      "weatherUnlockedId": 552802,
+      "elevation": { "base": 3280, "summit": 4760 },
+      "coordinates": { "lat": 49.3961, "lon": -123.2058 },
+      "region": "North Vancouver",
+      "status": "active",
+      "country": "canada"
+    },
+    {
+      "id": "seymour",
+      "name": "Mount Seymour",
+      "weatherUnlockedId": 552803,
+      "elevation": { "base": 3050, "summit": 3661 },
+      "coordinates": { "lat": 49.3591, "lon": -122.9442 },
+      "region": "North Vancouver",
+      "status": "active",
+      "country": "canada"
+    },
+    {
+      "id": "sunpeaks",
+      "name": "Sun Peaks Resort",
+      "weatherUnlockedId": 552804,
+      "elevation": { "base": 3970, "summit": 6824 },
+      "coordinates": { "lat": 50.8847, "lon": -119.8844 },
+      "region": "Thompson-Okanagan",
+      "status": "active",
+      "country": "canada"
+    },
+    {
+      "id": "bigwhite",
+      "name": "Big White Ski Resort",
+      "weatherUnlockedId": 552805,
+      "elevation": { "base": 4950, "summit": 7606 },
+      "coordinates": { "lat": 49.7167, "lon": -118.9333 },
+      "region": "Okanagan Valley",
+      "status": "active",
+      "country": "canada"
+    },
+    {
+      "id": "silverstar",
+      "name": "SilverStar Mountain Resort",
+      "weatherUnlockedId": 552806,
+      "elevation": { "base": 3935, "summit": 6280 },
+      "coordinates": { "lat": 50.4, "lon": -119.0833 },
+      "region": "Okanagan Valley",
+      "status": "active",
+      "country": "canada"
+    },
+    {
+      "id": "revelstoke",
+      "name": "Revelstoke Mountain Resort",
+      "weatherUnlockedId": 552807,
+      "elevation": { "base": 1713, "summit": 8058 },
+      "coordinates": { "lat": 50.9667, "lon": -118.1167 },
+      "region": "Columbia Shuswap",
+      "status": "active",
+      "country": "canada"
+    },
+    {
+      "id": "panorama",
+      "name": "Panorama Mountain Resort",
+      "weatherUnlockedId": 552808,
+      "elevation": { "base": 3937, "summit": 6800 },
+      "coordinates": { "lat": 50.3333, "lon": -116.25 },
+      "region": "Columbia Valley",
+      "status": "active",
+      "country": "canada"
+    },
+    {
+      "id": "kicking",
+      "name": "Kicking Horse Mountain Resort",
+      "weatherUnlockedId": 552809,
+      "elevation": { "base": 4134, "summit": 8033 },
+      "coordinates": { "lat": 51.2989, "lon": -116.9644 },
+      "region": "Columbia Valley",
+      "status": "active",
+      "country": "canada"
+    },
+    {
+      "id": "fernie",
+      "name": "Fernie Alpine Resort",
+      "weatherUnlockedId": 552810,
+      "elevation": { "base": 3504, "summit": 6325 },
+      "coordinates": { "lat": 49.5042, "lon": -115.0661 },
+      "region": "East Kootenay",
+      "status": "active",
+      "country": "canada"
+    },
+    {
+      "id": "kimberley",
+      "name": "Kimberley Alpine Resort",
+      "weatherUnlockedId": 552811,
+      "elevation": { "base": 4113, "summit": 6555 },
+      "coordinates": { "lat": 49.6869, "lon": -115.9764 },
+      "region": "East Kootenay",
+      "status": "active",
+      "country": "canada"
+    },
+    {
+      "id": "louiselake",
+      "name": "Lake Louise Ski Resort",
+      "weatherUnlockedId": 552812,
+      "elevation": { "base": 5400, "summit": 8743 },
+      "coordinates": { "lat": 51.4153, "lon": -116.1636 },
+      "region": "Bow Valley",
+      "status": "active",
+      "country": "canada"
+    },
+    {
+      "id": "sunshine",
+      "name": "Sunshine Village",
+      "weatherUnlockedId": 552813,
+      "elevation": { "base": 5440, "summit": 8954 },
+      "coordinates": { "lat": 51.1056, "lon": -115.7653 },
+      "region": "Bow Valley",
+      "status": "active",
+      "country": "canada"
+    },
+    {
+      "id": "norquay",
+      "name": "Mt Norquay",
+      "weatherUnlockedId": 552814,
+      "elevation": { "base": 4265, "summit": 7000 },
+      "coordinates": { "lat": 51.1944, "lon": -115.5486 },
+      "region": "Bow Valley",
+      "status": "active",
+      "country": "canada"
+    },
+    {
+      "id": "nakiska",
+      "name": "Nakiska Ski Area",
+      "weatherUnlockedId": 552815,
+      "elevation": { "base": 4600, "summit": 7700 },
+      "coordinates": { "lat": 50.9667, "lon": -115.1167 },
+      "region": "Kananaskis",
+      "status": "active",
+      "country": "canada"
+    },
+    {
+      "id": "marmot",
+      "name": "Marmot Basin",
+      "weatherUnlockedId": 552816,
+      "elevation": { "base": 5570, "summit": 8570 },
+      "coordinates": { "lat": 52.8167, "lon": -118.0833 },
+      "region": "Jasper",
+      "status": "active",
+      "country": "canada"
+    },
+    {
+      "id": "castle",
+      "name": "Castle Mountain Resort",
+      "weatherUnlockedId": 552817,
+      "elevation": { "base": 4400, "summit": 6763 },
+      "coordinates": { "lat": 49.3, "lon": -114.0667 },
+      "region": "Crowsnest Pass",
+      "status": "active",
+      "country": "canada"
+    }
+  ]
+}
