@@ -1,19 +1,28 @@
 import { useState } from 'react';
 
-// Lake Tahoe center for the embedded map.
-const LAT = 39.09;
-const LON = -120.04;
-const ZOOM = 8;
-
 type Overlay = 'radar' | 'snow';
 
-function windyUrl(overlay: Overlay): string {
+interface SnowRadarProps {
+  /** Map center + zoom. Defaults to Lake Tahoe. */
+  lat?: number;
+  lon?: number;
+  zoom?: number;
+  /** Label shown in the credit line. */
+  place?: string;
+}
+
+function windyUrl(
+  overlay: Overlay,
+  lat: number,
+  lon: number,
+  zoom: number
+): string {
   const params = new URLSearchParams({
-    lat: String(LAT),
-    lon: String(LON),
-    detailLat: String(LAT),
-    detailLon: String(LON),
-    zoom: String(ZOOM),
+    lat: String(lat),
+    lon: String(lon),
+    detailLat: String(lat),
+    detailLon: String(lon),
+    zoom: String(zoom),
     level: 'surface',
     overlay,
     product: overlay === 'radar' ? 'radar' : 'ecmwf',
@@ -33,11 +42,15 @@ function windyUrl(overlay: Overlay): string {
 }
 
 /**
- * Live snow map — an embedded Windy radar over the Sierra, framed in the
- * instrument chrome. Toggles between live precipitation radar and forecast
- * snowfall accumulation.
+ * Live snow map — an embedded Windy radar, framed in the instrument chrome.
+ * Toggles between live precipitation radar and forecast snowfall accumulation.
  */
-export function SnowRadar() {
+export function SnowRadar({
+  lat = 39.09,
+  lon = -120.04,
+  zoom = 8,
+  place = 'Lake Tahoe · Sierra Nevada',
+}: SnowRadarProps = {}) {
   const [overlay, setOverlay] = useState<Overlay>('radar');
 
   return (
@@ -66,14 +79,14 @@ export function SnowRadar() {
       <div className="radar-frame">
         <iframe
           key={overlay}
-          title="Live snow radar — Sierra Nevada"
-          src={windyUrl(overlay)}
+          title={`Live snow radar — ${place}`}
+          src={windyUrl(overlay, lat, lon, zoom)}
           loading="lazy"
         />
       </div>
 
       <div className="radar-cred">
-        WINDY.COM · LAKE TAHOE · SIERRA NEVADA ·{' '}
+        WINDY.COM · {place.toUpperCase()} ·{' '}
         {overlay === 'radar' ? 'LIVE PRECIPITATION RADAR' : 'FORECAST SNOWFALL'}
       </div>
     </section>

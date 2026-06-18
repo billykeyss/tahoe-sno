@@ -13,5 +13,5 @@ test('renders the homepage hero', async () => {
   render(<ReactRouterStub />);
 
   // Unique to the hero subtitle (avoids matching the footer's "SIERRA NEVADA").
-  await screen.findByText(/Hourly snow, wind and lift telemetry/i);
+  await screen.findByText(/Hourly snow, wind and snowpack telemetry/i);
 });

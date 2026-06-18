@@ -1,12 +1,8 @@
-import { useState, useEffect } from 'react';
 import { Resort } from './ResortGrid';
 import { useResortWeather } from '../services/weatherStore';
+import { useSnowpack } from '../services/stationData';
 import { snowQuality } from '../services/conditions';
-import {
-  hasDirectAPISupport,
-  resortAPIService,
-  type ResortSnowReport,
-} from '../services/resortAPIs';
+import { SourceTip } from './SourceTip';
 
 interface ResortCardProps {
   resort: Resort;
@@ -47,28 +43,7 @@ const nowHHMM = () =>
 
 export function ResortCard({ resort }: ResortCardProps) {
   const { data: weatherData, loading, error } = useResortWeather(resort.id);
-  const [report, setReport] = useState<ResortSnowReport | null>(null);
-
-  // Direct resort report (lift status, trail counts) — independent of weather.
-  useEffect(() => {
-    let cancelled = false;
-    if (!hasDirectAPISupport(resort.name)) {
-      setReport(null);
-      return;
-    }
-    resortAPIService
-      .getResortData(resort.name)
-      .then((data) => {
-        if (!cancelled) setReport(data);
-      })
-      .catch((err) => {
-        console.error(`Error fetching resort report for ${resort.name}:`, err);
-        if (!cancelled) setReport(null);
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, [resort.name]);
+  const { snowpack } = useSnowpack(resort.id);
 
   const summitReadout = () => {
     const { summit } = resort.elevation;
@@ -157,8 +132,13 @@ export function ResortCard({ resort }: ResortCardProps) {
         </div>
         <div className="temp">
           <div className="big">
-            {weatherData.temp_c}
-            <span className="deg">°C</span>
+            <SourceTip
+              source="Open-Meteo"
+              detail="Current air temperature & conditions"
+            >
+              {weatherData.temp_c}
+              <span className="deg">°C</span>
+            </SourceTip>
           </div>
           <div className="sub">
             {cToF(weatherData.temp_c)}°F · {CONDITION_LABELS[condition]}
@@ -173,8 +153,13 @@ export function ResortCard({ resort }: ResortCardProps) {
             24-Hour Fresh
           </div>
           <div className="big">
-            {weatherData.freshsnow_cm}
-            <span className="u">cm</span>
+            <SourceTip
+              source="Open-Meteo"
+              detail="New snowfall in the last 24 hours (forecast model)"
+            >
+              {weatherData.freshsnow_cm}
+              <span className="u">cm</span>
+            </SourceTip>
           </div>
         </div>
         <div className="right">
@@ -194,25 +179,76 @@ export function ResortCard({ resort }: ResortCardProps) {
       <div className="dtable">
         <div className="drow">
           <span className="k">Base Depth</span>
-          <span className="metric">{Math.round(weatherData.base_depth)} cm</span>
+          <SourceTip source="Open-Meteo" detail="Modeled snow depth at base elevation">
+            <span className="metric">{Math.round(weatherData.base_depth)} cm</span>
+          </SourceTip>
           <span className="imp">{cmToIn(weatherData.base_depth)}"</span>
         </div>
         <div className="drow">
           <span className="k">Summit Depth</span>
-          <span className="metric">{Math.round(weatherData.upper_depth)} cm</span>
+          <SourceTip source="Open-Meteo" detail="Modeled snow depth at summit elevation">
+            <span className="metric">{Math.round(weatherData.upper_depth)} cm</span>
+          </SourceTip>
           <span className="imp">{cmToIn(weatherData.upper_depth)}"</span>
         </div>
         <div className="drow">
           <span className="k">7-Day Total</span>
-          <span className="metric">{Math.round(totalWeekSnow)} cm</span>
+          <SourceTip source="Open-Meteo" detail="Total snowfall over the last 7 days">
+            <span className="metric">{Math.round(totalWeekSnow)} cm</span>
+          </SourceTip>
           <span className="imp">{cmToIn(totalWeekSnow)}"</span>
         </div>
+
+        {/* Measured snowpack from the nearest CDEC sensor, shown alongside the
+            Open-Meteo model rows above. Only when a station is mapped. */}
+        {snowpack && (
+          <>
+            <div className="drow cdec">
+              <span className="k">Snowpack · CDEC</span>
+              <SourceTip
+                source="CDEC"
+                detail={`Measured snow depth at ${snowpack.data.stationName} (${snowpack.data.elevationFt} ft)`}
+              >
+                <span className="metric">
+                  {snowpack.data.depth_cm != null
+                    ? `${Math.round(snowpack.data.depth_cm)} cm`
+                    : '—'}
+                </span>
+              </SourceTip>
+              <span className="imp">
+                {snowpack.data.depth_cm != null
+                  ? `${cmToIn(snowpack.data.depth_cm)}"`
+                  : ''}
+              </span>
+            </div>
+            <div className="drow cdec">
+              <span className="k">SWE · CDEC</span>
+              <SourceTip
+                source="CDEC"
+                detail={`Snow-water-equivalent at ${snowpack.data.stationName}`}
+              >
+                <span className="metric">
+                  {snowpack.data.swe_cm != null
+                    ? `${Math.round(snowpack.data.swe_cm)} cm`
+                    : '—'}
+                </span>
+              </SourceTip>
+              <span className="imp">
+                {snowpack.data.swe_cm != null
+                  ? `${cmToIn(snowpack.data.swe_cm)}"`
+                  : ''}
+              </span>
+            </div>
+          </>
+        )}
       </div>
 
       {/* 7-DAY HISTOGRAM */}
       <div className="hist">
         <div className="hist-head">
-          <span className="label">7-Day Snowfall</span>
+          <SourceTip source="Open-Meteo" detail="Daily snowfall over the last 7 days">
+            <span className="label">7-Day Snowfall</span>
+          </SourceTip>
           <span className="label">{Math.round(totalWeekSnow)} cm total</span>
         </div>
         <div className="hist-bars">
@@ -239,7 +275,12 @@ export function ResortCard({ resort }: ResortCardProps) {
       {/* 5-DAY FORECAST */}
       <div className="fc">
         <div className="label" style={{ marginBottom: 7 }}>
-          5-Day Forecast
+          <SourceTip
+            source="Open-Meteo"
+            detail="5-day temperature & snowfall forecast"
+          >
+            5-Day Forecast
+          </SourceTip>
         </div>
         <div className="fc-grid">
           {weatherData.forecast.map((day) => {
@@ -268,32 +309,20 @@ export function ResortCard({ resort }: ResortCardProps) {
         </div>
       </div>
 
-      {/* FOOTER — lift/trail telemetry */}
+      {/* FOOTER — wind + reading timestamp (snowpack now lives in the table) */}
       <div className="card-foot">
         <div className="telemetry">
-          <div
-            className="tele"
-            title={report ? `Lift data via ${report.source}` : undefined}
-          >
-            <span className="k">Lifts</span>
-            <span className="v">
-              {report ? `${report.liftsOpen}/${report.liftsTotal}` : '—'}
-            </span>
-          </div>
-          <div className="tele">
-            <span className="k">Trails</span>
-            <span className="v">
-              {report && report.trailsTotal > 0
-                ? `${report.trailsOpen}/${report.trailsTotal}`
-                : '—'}
-            </span>
-          </div>
           <div className="tele">
             <span className="k">Wind</span>
-            <span className="v">{weatherData.wind_speed_mph} mph</span>
+            <SourceTip source="Open-Meteo" detail="Wind speed (model estimate)">
+              <span className="v">{weatherData.wind_speed_mph} mph</span>
+            </SourceTip>
           </div>
         </div>
-        <span className="ts">UPD {nowHHMM()}</span>
+        <span className="ts">
+          {weatherData.source ? `${weatherData.source.toUpperCase()} · ` : ''}UPD{' '}
+          {nowHHMM()}
+        </span>
       </div>
     </article>
   );

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!-- Template: cortex/setup.sh substitutes __REPO_DIR__ and __PORT__ and installs
+     this to ~/Library/LaunchAgents/com.tahoesno.server.plist -->
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>com.tahoesno.server</string>
+
+  <!-- bash -lc loads the login PATH so pnpm/node resolve under launchd -->
+  <key>ProgramArguments</key>
+  <array>
+    <string>/bin/bash</string>
+    <string>-lc</string>
+    <string>cd __REPO_DIR__ &amp;&amp; exec pnpm start</string>
+  </array>
+
+  <key>WorkingDirectory</key>
+  <string>__REPO_DIR__</string>
+
+  <key>EnvironmentVariables</key>
+  <dict>
+    <key>PORT</key>
+    <string>__PORT__</string>
+    <key>NODE_ENV</key>
+    <string>production</string>
+  </dict>
+
+  <key>RunAtLoad</key>
+  <true/>
+  <key>KeepAlive</key>
+  <true/>
+
+  <key>StandardOutPath</key>
+  <string>__REPO_DIR__/cortex/tahoesno.out.log</string>
+  <key>StandardErrorPath</key>
+  <string>__REPO_DIR__/cortex/tahoesno.err.log</string>
+</dict>
+</plist>

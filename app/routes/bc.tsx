@@ -1,6 +1,8 @@
 import { ResortGrid } from '../components/ResortGrid';
 import { RegionReadout } from '../components/RegionReadout';
+import { SnowRadar } from '../components/SnowRadar';
 import { WeatherProvider } from '../services/weatherStore';
+import { HeroHeadline } from '../components/HeroHeadline';
 
 // British Columbia & Canadian Rockies — same "Alpine Instrument" system as home.
 // Global chrome (top bar, theme toggle) is provided by app/root.tsx.
@@ -10,9 +12,7 @@ export default function BCPage() {
       <main className="wrap">
         <section className="hero">
           <div>
-            <h1>
-              The <em>Coast</em> is loaded. Go north.
-            </h1>
+            <HeroHeadline place="The Coast" />
             <p>
               Hourly snow, wind and lift telemetry for British Columbia and the
               Canadian Rockies. Read the mountain before the drive.
@@ -32,6 +32,13 @@ export default function BCPage() {
             ]}
           />
         </section>
+
+        <SnowRadar
+          lat={50.8}
+          lon={-118.0}
+          zoom={6}
+          place="Canadian Rockies & BC"
+        />
 
         <ResortGrid
           country="canada"
