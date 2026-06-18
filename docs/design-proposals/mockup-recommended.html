@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>TahoeSno — Alpine Instrument (Recommended Redesign Mockup)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<!--
+  Type system:
+  - Space Grotesk  : display / numerals / headings (geometric grotesque, opinionated, not Inter)
+  - IBM Plex Mono  : data labels, units, station codes (instrument readout feel)
+  - Archivo        : UI body / supporting copy (humanist grotesque workhorse)
+-->
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Archivo:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    /* ALPINE INSTRUMENT — dark "control panel" mode (default for a glance-and-go utility) */
+    --bg:        #0E1116;   /* near-black slate, not pure black */
+    --bg-grid:   #161B22;   /* panel surface */
+    --panel:     #11161D;   /* card body */
+    --panel-2:   #1A212B;   /* inset wells */
+    --line:      #232C38;   /* hairline borders */
+    --line-soft: #1B2530;   /* softer hairline */
+    --line-2:    #2D3947;   /* stronger dividers */
+    --ink:       #E9EEF4;   /* primary text */
+    --ink-2:     #9AA7B6;   /* secondary text */
+    --ink-3:     #5E6B7B;   /* tertiary / units */
+    --accent:    #E8542B;   /* signal orange — avalanche-beacon / trail-marker, NOT blue→purple */
+    --accent-dim:#7a2c17;
+    --snow:      #BFE3FF;   /* cold powder blue, used sparingly for fresh-snow data only */
+    --snow-deep: #4FA3E3;
+    --good:      #57C77F;   /* legible green for "open" status */
+    --warn:      #E5A93B;   /* amber for advisories */
+    --danger:    #E5484D;
+    --radius:    4px;       /* deliberately tight, machined corners — no 16px pills */
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+
+  body {
+    background:
+      /* faint topographic-contour texture from layered radial lines */
+      radial-gradient(circle at 18% -10%, rgba(79,163,227,0.06), transparent 42%),
+      var(--bg);
+    color: var(--ink);
+    font-family: 'Archivo', system-ui, sans-serif;
+    font-size: 15px;
+    line-height: 1.45;
+    min-height: 100vh;
+    /* subtle engineering grid underlay — instrument panel cue */
+    background-image:
+      linear-gradient(var(--line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line) 1px, transparent 1px);
+    background-size: 100% 100%, 100% 100%;
+  }
+
+  .grid-overlay {
+    position: fixed; inset: 0; pointer-events: none; z-index: 0;
+    background-image:
+      linear-gradient(rgba(45,57,71,0.18) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(45,57,71,0.18) 1px, transparent 1px);
+    background-size: 48px 48px;
+    mask-image: radial-gradient(ellipse at 50% 0%, #000 30%, transparent 80%);
+  }
+
+  .wrap { position: relative; z-index: 1; max-width: 1180px; margin: 0 auto; padding: 0 24px 64px; }
+
+  /* ---------- MONO LABEL SYSTEM ---------- */
+  .mono { font-family: 'IBM Plex Mono', monospace; }
+  .label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10.5px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+  .unit { font-family: 'IBM Plex Mono', monospace; color: var(--ink-3); font-weight: 500; }
+
+  /* ---------- TOP BAR (no glass blur, hard hairline, status-strip aesthetic) ---------- */
+  header.topbar {
+    position: sticky; top: 0; z-index: 20;
+    background: var(--bg);
+    border-bottom: 1px solid var(--line-2);
+  }
+  .topbar-inner {
+    max-width: 1180px; margin: 0 auto; padding: 14px 24px;
+    display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  }
+  .brand { display: flex; align-items: baseline; gap: 12px; }
+  .brand-mark {
+    font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 20px;
+    letter-spacing: 0.01em; color: var(--ink);
+    display: inline-flex; align-items: center; gap: 9px;
+  }
+  /* mountain glyph drawn in CSS, not an emoji or floating logo */
+  .peak {
+    width: 22px; height: 16px; flex: none;
+    background:
+      conic-gradient(from -45deg at 50% 100%, transparent 0 45%, var(--accent) 45% 55%, transparent 55%);
+    clip-path: polygon(0 100%, 28% 38%, 42% 60%, 64% 8%, 100% 100%);
+    background: linear-gradient(180deg, var(--snow) 0 26%, var(--accent) 26% 100%);
+  }
+  .brand-sub {
+    font-family: 'IBM Plex Mono', monospace; font-size: 10.5px; letter-spacing: 0.14em;
+    color: var(--ink-3); text-transform: uppercase;
+  }
+  .status-strip { display: flex; align-items: center; gap: 18px; }
+  .stat-item { display: flex; align-items: center; gap: 7px; }
+  .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--good); box-shadow: 0 0 0 0 var(--good); }
+  .stat-val { font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: var(--ink-2); }
+  .topbtn {
+    font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 0.08em;
+    color: var(--ink-2); background: transparent; border: 1px solid var(--line-2);
+    padding: 7px 11px; border-radius: var(--radius); cursor: pointer; text-transform: uppercase;
+  }
+  .topbtn:hover { border-color: var(--ink-3); color: var(--ink); }
+
+  /* ---------- HERO: a station readout, not a centered gradient headline ---------- */
+  .hero {
+    border-bottom: 1px solid var(--line-2);
+    padding: 40px 0 30px;
+    display: grid; grid-template-columns: 1fr auto; gap: 24px; align-items: end;
+  }
+  .hero h1 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 600; font-size: clamp(34px, 5vw, 54px); line-height: 0.98;
+    letter-spacing: -0.01em; color: var(--ink);
+    max-width: 14ch;
+  }
+  .hero h1 em { font-style: normal; color: var(--accent); }
+  .hero p {
+    margin-top: 14px; max-width: 46ch; color: var(--ink-2); font-size: 15px;
+  }
+  /* live readout block, right-aligned — like a weather-station summary */
+  .readout {
+    border: 1px solid var(--line-2); border-radius: var(--radius);
+    background: var(--bg-grid);
+    padding: 16px 18px; min-width: 240px;
+  }
+  .readout-row { display: flex; justify-content: space-between; align-items: baseline; padding: 6px 0; }
+  .readout-row + .readout-row { border-top: 1px solid var(--line); }
+  .readout-row .v { font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 18px; color: var(--ink); }
+  .readout-row .v.snow { color: var(--snow); }
+  .readout-row .v.acc { color: var(--accent); }
+
+  /* ---------- SECTION HEADER ---------- */
+  .sec-head {
+    display: flex; align-items: center; gap: 14px; margin: 38px 0 18px;
+  }
+  .sec-head h2 {
+    font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 15px;
+    letter-spacing: 0.02em; color: var(--ink); white-space: nowrap;
+  }
+  .sec-head .rule { flex: 1; height: 1px; background: var(--line-2); }
+  .sec-head .count { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--ink-3); letter-spacing: 0.1em; }
+
+  /* ---------- CARD GRID ---------- */
+  .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+  @media (max-width: 920px) { .grid { grid-template-columns: 1fr; } }
+
+  .card {
+    background: var(--panel);
+    border: 1px solid var(--line-2);
+    border-radius: var(--radius);
+    overflow: hidden;
+    transition: border-color .18s ease, transform .18s ease;
+    position: relative;
+  }
+  .card:hover { border-color: #3a4a5c; transform: translateY(-2px); }
+
+  /* card top strip = a tiny measurement scale, not a gradient bar */
+  .card-rule {
+    height: 26px; border-bottom: 1px solid var(--line);
+    display: flex; align-items: stretch; background: var(--bg-grid);
+  }
+  .tick { flex: 1; border-right: 1px solid var(--line); }
+  .tick:nth-child(5n+1) { background: linear-gradient(180deg, var(--line-2), transparent 60%); }
+  .card-rule .ridx {
+    margin-left: auto; align-self: center; padding: 0 12px;
+    font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 0.12em; color: var(--ink-3);
+    border-left: 1px solid var(--line);
+  }
+
+  .card-head { padding: 16px 18px 12px; display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+  .card-name { font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 20px; letter-spacing: -0.005em; color: var(--ink); }
+  .card-meta { margin-top: 5px; display: flex; gap: 8px; align-items: center; }
+  .region-tag {
+    font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--ink-3); border: 1px solid var(--line-2); padding: 2px 6px; border-radius: 2px;
+  }
+  .open-flag {
+    font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--good); display: inline-flex; align-items: center; gap: 5px;
+  }
+  .open-flag .dot { background: var(--good); }
+
+  /* temperature read, monospace, right-aligned like an instrument */
+  .temp { text-align: right; }
+  .temp .big { font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 30px; line-height: 1; color: var(--ink); }
+  .temp .big .deg { color: var(--ink-3); font-weight: 400; }
+  .temp .sub { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--ink-3); margin-top: 4px; }
+
+  /* PRIMARY METRIC — fresh snow gets the loudest treatment, since that's the actual question */
+  .fresh {
+    margin: 0 18px 14px; padding: 14px 16px;
+    background: var(--panel-2); border: 1px solid var(--line-2); border-radius: var(--radius);
+    display: flex; justify-content: space-between; align-items: flex-end;
+  }
+  .fresh .big {
+    font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 40px; line-height: 0.9; color: var(--snow);
+    letter-spacing: -0.02em;
+  }
+  .fresh .big .u { font-size: 16px; color: var(--snow-deep); font-family: 'IBM Plex Mono', monospace; margin-left: 4px; font-weight: 500; }
+  .fresh .right { text-align: right; }
+  .fresh .imperial { font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: var(--ink-2); }
+
+  /* DATA TABLE — depth metrics as a dense instrument table, not 4 floating tiles */
+  .dtable { margin: 0 18px 14px; border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; }
+  .drow { display: grid; grid-template-columns: 1fr auto auto; align-items: center; padding: 9px 14px; gap: 12px; }
+  .drow + .drow { border-top: 1px solid var(--line); }
+  .drow:nth-child(even) { background: rgba(255,255,255,0.012); }
+  .drow .k { font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-3); }
+  .drow .metric { font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 15px; color: var(--ink); }
+  .drow .imp { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--ink-3); min-width: 52px; text-align: right; }
+
+  /* 7-DAY HISTOGRAM — bars use snow blue ramp, baseline ruler, mono axis */
+  .hist { margin: 4px 18px 14px; }
+  .hist-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px; }
+  .hist-bars { display: flex; align-items: flex-end; gap: 5px; height: 64px; padding-bottom: 6px; border-bottom: 1px solid var(--line-2); }
+  .hbar { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: 4px; }
+  .hbar .b {
+    width: 100%; border-radius: 1px 1px 0 0;
+    background: linear-gradient(180deg, var(--snow), var(--snow-deep));
+  }
+  .hbar.dry .b { background: var(--line-2); }
+  .hbar .d { font-family: 'IBM Plex Mono', monospace; font-size: 9px; color: var(--ink-3); letter-spacing: 0.04em; }
+
+  /* 5-DAY FORECAST — compact row of cells */
+  .fc { margin: 4px 18px 16px; }
+  .fc-grid { display: grid; grid-template-columns: repeat(5,1fr); gap: 0; border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; }
+  .fc-cell { padding: 10px 6px; text-align: center; }
+  .fc-cell + .fc-cell { border-left: 1px solid var(--line); }
+  .fc-cell.today { background: rgba(232,84,43,0.07); }
+  .fc-cell .day { font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-3); }
+  .fc-cell .ic { font-size: 17px; margin: 6px 0 4px; }
+  .fc-cell .t { font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 13px; color: var(--ink); }
+  .fc-cell .sn { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--snow); margin-top: 3px; }
+  .fc-cell .sn.zero { color: var(--ink-3); }
+
+  /* CARD FOOTER — lift/trail telemetry, wind, timestamp */
+  .card-foot {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 11px 18px; border-top: 1px solid var(--line); background: var(--bg-grid);
+  }
+  .telemetry { display: flex; gap: 16px; align-items: center; }
+  .tele { display: flex; flex-direction: column; gap: 1px; }
+  .tele .k { font-family: 'IBM Plex Mono', monospace; font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-3); }
+  .tele .v { font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 13px; color: var(--ink); }
+  .ts { font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: var(--ink-3); letter-spacing: 0.06em; }
+
+  footer.foot {
+    margin-top: 48px; border-top: 1px solid var(--line-2); padding-top: 20px;
+    display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;
+    font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--ink-3); letter-spacing: 0.06em;
+  }
+</style>
+</head>
+<body>
+  <div class="grid-overlay"></div>
+
+  <!-- TOP BAR -->
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">
+        <span class="brand-mark"><span class="peak"></span>TahoeSno</span>
+        <span class="brand-sub">Sierra Snow Telemetry</span>
+      </div>
+      <div class="status-strip">
+        <span class="stat-item"><span class="dot"></span><span class="stat-val">FEED LIVE</span></span>
+        <span class="stat-item"><span class="stat-val mono">SYNC 08:14 PT</span></span>
+        <button class="topbtn">Metric / US</button>
+        <button class="topbtn">BC ›</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <!-- HERO -->
+    <section class="hero">
+      <div>
+        <h1>Tahoe is <em>storming.</em> Pick your line.</h1>
+        <p>Hourly snow, wind and lift telemetry for every Sierra Nevada ski area. Read the mountain before you drive the pass.</p>
+      </div>
+      <div class="readout">
+        <div class="readout-row"><span class="label">Region 24h max</span><span class="v snow">31<span class="unit"> cm</span></span></div>
+        <div class="readout-row"><span class="label">Resorts open</span><span class="v">12<span class="unit"> / 13</span></span></div>
+        <div class="readout-row"><span class="label">Chains I-80</span><span class="v acc">R-2</span></div>
+        <div class="readout-row"><span class="label">Freezing line</span><span class="v">6,400<span class="unit"> ft</span></span></div>
+      </div>
+    </section>
+
+    <!-- SECTION HEADER -->
+    <div class="sec-head">
+      <h2>Tahoe Local Pass</h2>
+      <span class="rule"></span>
+      <span class="count">03 STATIONS · NORTH + SOUTH SHORE</span>
+    </div>
+
+    <!-- CARD GRID -->
+    <section class="grid">
+
+      <!-- ===== PALISADES TAHOE ===== -->
+      <article class="card">
+        <div class="card-rule">
+          <span class="tick"></span><span class="tick"></span><span class="tick"></span><span class="tick"></span><span class="tick"></span>
+          <span class="tick"></span><span class="tick"></span><span class="tick"></span><span class="tick"></span><span class="tick"></span>
+          <span class="ridx">39.20°N / 9,050 ft</span>
+        </div>
+        <div class="card-head">
+          <div>
+            <div class="card-name">Palisades Tahoe</div>
+            <div class="card-meta">
+              <span class="region-tag">North Shore</span>
+              <span class="open-flag"><span class="dot"></span>Open</span>
+            </div>
+          </div>
+          <div class="temp">
+            <div class="big">-4<span class="deg">°C</span></div>
+            <div class="sub">25°F · SNOW</div>
+          </div>
+        </div>
+        <div class="fresh">
+          <div><div class="label" style="margin-bottom:6px">24-Hour Fresh</div><div class="big">31<span class="u">cm</span></div></div>
+          <div class="right"><div class="imperial">12.2 in</div><div class="label" style="margin-top:4px;color:var(--good)">Excellent</div></div>
+        </div>
+        <div class="dtable">
+          <div class="drow"><span class="k">Base Depth</span><span class="metric">168 cm</span><span class="imp">66"</span></div>
+          <div class="drow"><span class="k">Summit Depth</span><span class="metric">244 cm</span><span class="imp">96"</span></div>
+          <div class="drow"><span class="k">7-Day Total</span><span class="metric">79 cm</span><span class="imp">31"</span></div>
+        </div>
+        <div class="hist">
+          <div class="hist-head"><span class="label">7-Day Snowfall</span><span class="label">79 cm total</span></div>
+          <div class="hist-bars">
+            <div class="hbar"><span class="b" style="height:34%"></span><span class="d">M</span></div>
+            <div class="hbar dry"><span class="b" style="height:6%"></span><span class="d">T</span></div>
+            <div class="hbar"><span class="b" style="height:52%"></span><span class="d">W</span></div>
+            <div class="hbar"><span class="b" style="height:70%"></span><span class="d">T</span></div>
+            <div class="hbar dry"><span class="b" style="height:10%"></span><span class="d">F</span></div>
+            <div class="hbar"><span class="b" style="height:44%"></span><span class="d">S</span></div>
+            <div class="hbar"><span class="b" style="height:100%"></span><span class="d">S</span></div>
+          </div>
+        </div>
+        <div class="fc">
+          <div class="label" style="margin-bottom:7px">5-Day Forecast</div>
+          <div class="fc-grid">
+            <div class="fc-cell today"><div class="day">Today</div><div class="ic">❄️</div><div class="t">-4°/-9°</div><div class="sn">31cm</div></div>
+            <div class="fc-cell"><div class="day">Thu</div><div class="ic">❄️</div><div class="t">-3°/-8°</div><div class="sn">14cm</div></div>
+            <div class="fc-cell"><div class="day">Fri</div><div class="ic">⛅</div><div class="t">-1°/-7°</div><div class="sn zero">—</div></div>
+            <div class="fc-cell"><div class="day">Sat</div><div class="ic">☀️</div><div class="t">2°/-5°</div><div class="sn zero">—</div></div>
+            <div class="fc-cell"><div class="day">Sun</div><div class="ic">❄️</div><div class="t">-2°/-6°</div><div class="sn">9cm</div></div>
+          </div>
+        </div>
+        <div class="card-foot">
+          <div class="telemetry">
+            <div class="tele"><span class="k">Lifts</span><span class="v">28/34</span></div>
+            <div class="tele"><span class="k">Trails</span><span class="v">142/170</span></div>
+            <div class="tele"><span class="k">Wind</span><span class="v">22 mph</span></div>
+          </div>
+          <span class="ts">UPD 08:11</span>
+        </div>
+      </article>
+
+      <!-- ===== HEAVENLY ===== -->
+      <article class="card">
+        <div class="card-rule">
+          <span class="tick"></span><span class="tick"></span><span class="tick"></span><span class="tick"></span><span class="tick"></span>
+          <span class="tick"></span><span class="tick"></span><span class="tick"></span><span class="tick"></span><span class="tick"></span>
+          <span class="ridx">38.94°N / 10,067 ft</span>
+        </div>
+        <div class="card-head">
+          <div>
+            <div class="card-name">Heavenly</div>
+            <div class="card-meta">
+              <span class="region-tag">South Shore</span>
+              <span class="open-flag"><span class="dot"></span>Open</span>
+            </div>
+          </div>
+          <div class="temp">
+            <div class="big">-2<span class="deg">°C</span></div>
+            <div class="sub">28°F · P-CLOUDY</div>
+          </div>
+        </div>
+        <div class="fresh">
+          <div><div class="label" style="margin-bottom:6px">24-Hour Fresh</div><div class="big">12<span class="u">cm</span></div></div>
+          <div class="right"><div class="imperial">4.7 in</div><div class="label" style="margin-top:4px;color:var(--snow-deep)">Good</div></div>
+        </div>
+        <div class="dtable">
+          <div class="drow"><span class="k">Base Depth</span><span class="metric">137 cm</span><span class="imp">54"</span></div>
+          <div class="drow"><span class="k">Summit Depth</span><span class="metric">203 cm</span><span class="imp">80"</span></div>
+          <div class="drow"><span class="k">7-Day Total</span><span class="metric">46 cm</span><span class="imp">18"</span></div>
+        </div>
+        <div class="hist">
+          <div class="hist-head"><span class="label">7-Day Snowfall</span><span class="label">46 cm total</span></div>
+          <div class="hist-bars">
+            <div class="hbar"><span class="b" style="height:48%"></span><span class="d">M</span></div>
+            <div class="hbar dry"><span class="b" style="height:8%"></span><span class="d">T</span></div>
+            <div class="hbar"><span class="b" style="height:30%"></span><span class="d">W</span></div>
+            <div class="hbar"><span class="b" style="height:62%"></span><span class="d">T</span></div>
+            <div class="hbar dry"><span class="b" style="height:6%"></span><span class="d">F</span></div>
+            <div class="hbar"><span class="b" style="height:24%"></span><span class="d">S</span></div>
+            <div class="hbar"><span class="b" style="height:100%"></span><span class="d">S</span></div>
+          </div>
+        </div>
+        <div class="fc">
+          <div class="label" style="margin-bottom:7px">5-Day Forecast</div>
+          <div class="fc-grid">
+            <div class="fc-cell today"><div class="day">Today</div><div class="ic">⛅</div><div class="t">-2°/-7°</div><div class="sn">12cm</div></div>
+            <div class="fc-cell"><div class="day">Thu</div><div class="ic">☀️</div><div class="t">1°/-6°</div><div class="sn zero">—</div></div>
+            <div class="fc-cell"><div class="day">Fri</div><div class="ic">☀️</div><div class="t">3°/-4°</div><div class="sn zero">—</div></div>
+            <div class="fc-cell"><div class="day">Sat</div><div class="ic">⛅</div><div class="t">2°/-5°</div><div class="sn zero">—</div></div>
+            <div class="fc-cell"><div class="day">Sun</div><div class="ic">❄️</div><div class="t">-1°/-6°</div><div class="sn">7cm</div></div>
+          </div>
+        </div>
+        <div class="card-foot">
+          <div class="telemetry">
+            <div class="tele"><span class="k">Lifts</span><span class="v">25/28</span></div>
+            <div class="tele"><span class="k">Trails</span><span class="v">88/97</span></div>
+            <div class="tele"><span class="k">Wind</span><span class="v">15 mph</span></div>
+          </div>
+          <span class="ts">UPD 08:09</span>
+        </div>
+      </article>
+
+      <!-- ===== NORTHSTAR ===== -->
+      <article class="card">
+        <div class="card-rule">
+          <span class="tick"></span><span class="tick"></span><span class="tick"></span><span class="tick"></span><span class="tick"></span>
+          <span class="tick"></span><span class="tick"></span><span class="tick"></span><span class="tick"></span><span class="tick"></span>
+          <span class="ridx">39.27°N / 8,610 ft</span>
+        </div>
+        <div class="card-head">
+          <div>
+            <div class="card-name">Northstar California</div>
+            <div class="card-meta">
+              <span class="region-tag">North Shore</span>
+              <span class="open-flag"><span class="dot"></span>Open</span>
+            </div>
+          </div>
+          <div class="temp">
+            <div class="big">-3<span class="deg">°C</span></div>
+            <div class="sub">27°F · SNOW</div>
+          </div>
+        </div>
+        <div class="fresh">
+          <div><div class="label" style="margin-bottom:6px">24-Hour Fresh</div><div class="big">23<span class="u">cm</span></div></div>
+          <div class="right"><div class="imperial">9.1 in</div><div class="label" style="margin-top:4px;color:var(--good)">Excellent</div></div>
+        </div>
+        <div class="dtable">
+          <div class="drow"><span class="k">Base Depth</span><span class="metric">152 cm</span><span class="imp">60"</span></div>
+          <div class="drow"><span class="k">Summit Depth</span><span class="metric">198 cm</span><span class="imp">78"</span></div>
+          <div class="drow"><span class="k">7-Day Total</span><span class="metric">61 cm</span><span class="imp">24"</span></div>
+        </div>
+        <div class="hist">
+          <div class="hist-head"><span class="label">7-Day Snowfall</span><span class="label">61 cm total</span></div>
+          <div class="hist-bars">
+            <div class="hbar"><span class="b" style="height:40%"></span><span class="d">M</span></div>
+            <div class="hbar dry"><span class="b" style="height:7%"></span><span class="d">T</span></div>
+            <div class="hbar"><span class="b" style="height:44%"></span><span class="d">W</span></div>
+            <div class="hbar"><span class="b" style="height:58%"></span><span class="d">T</span></div>
+            <div class="hbar dry"><span class="b" style="height:9%"></span><span class="d">F</span></div>
+            <div class="hbar"><span class="b" style="height:36%"></span><span class="d">S</span></div>
+            <div class="hbar"><span class="b" style="height:100%"></span><span class="d">S</span></div>
+          </div>
+        </div>
+        <div class="fc">
+          <div class="label" style="margin-bottom:7px">5-Day Forecast</div>
+          <div class="fc-grid">
+            <div class="fc-cell today"><div class="day">Today</div><div class="ic">❄️</div><div class="t">-3°/-8°</div><div class="sn">23cm</div></div>
+            <div class="fc-cell"><div class="day">Thu</div><div class="ic">❄️</div><div class="t">-2°/-7°</div><div class="sn">11cm</div></div>
+            <div class="fc-cell"><div class="day">Fri</div><div class="ic">⛅</div><div class="t">0°/-6°</div><div class="sn zero">—</div></div>
+            <div class="fc-cell"><div class="day">Sat</div><div class="ic">☀️</div><div class="t">2°/-4°</div><div class="sn zero">—</div></div>
+            <div class="fc-cell"><div class="day">Sun</div><div class="ic">❄️</div><div class="t">-1°/-5°</div><div class="sn">8cm</div></div>
+          </div>
+        </div>
+        <div class="card-foot">
+          <div class="telemetry">
+            <div class="tele"><span class="k">Lifts</span><span class="v">18/20</span></div>
+            <div class="tele"><span class="k">Trails</span><span class="v">96/100</span></div>
+            <div class="tele"><span class="k">Wind</span><span class="v">18 mph</span></div>
+          </div>
+          <span class="ts">UPD 08:12</span>
+        </div>
+      </article>
+
+    </section>
+
+    <footer class="foot">
+      <span>TAHOESNO · WEATHER VIA OPEN-METEO · STATION DATA REFRESHED HOURLY</span>
+      <span>40.7°N 120.0°W · SIERRA NEVADA · 2026 WINTER</span>
+    </footer>
+  </main>
+</body>
+</html>

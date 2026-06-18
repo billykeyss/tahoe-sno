@@ -6,8 +6,12 @@ export default defineConfig(() => ({
   root: __dirname,
   cacheDir: './node_modules/.vite',
   server: {
-    port: 4200,
+    port: 1255,
     host: 'localhost',
+    proxy: {
+      // In dev, forward /api to the Hono data server (`pnpm server`).
+      '/api': 'http://localhost:8787',
+    },
   },
   preview: {
     port: 4300,

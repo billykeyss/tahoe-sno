@@ -36,6 +36,14 @@ yarn-error.log
 testem.log
 /typings
 
+# local env files (keep .env.example tracked)
+.env
+.env.local
+.env.*.local
+
+# cortex self-host runtime logs
+cortex/*.log
+
 # System Files
 .DS_Store
 Thumbs.db

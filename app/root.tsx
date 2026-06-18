@@ -8,7 +8,9 @@ import {
   type LinksFunction,
 } from 'react-router';
 
-import { AppNav } from './app-nav';
+import './styles/instrument.css';
+import { Topbar } from './components/Topbar';
+import { THEME_INIT_SCRIPT } from './theme-mode';
 
 export const meta: MetaFunction = () => [
   {
@@ -25,21 +27,24 @@ export const links: LinksFunction = () => [
   },
   {
     rel: 'stylesheet',
-    href: 'https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap',
+    href: 'https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Archivo:wght@400;500;600;700&display=swap',
   },
 ];
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" data-theme="dark" suppressHydrationWarning>
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <Meta />
         <Links />
+        {/* Set the theme before first paint to avoid a flash of the wrong mode. */}
+        <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
       </head>
       <body>
-        <AppNav />
+        <div className="grid-overlay" aria-hidden="true" />
+        <Topbar />
         {children}
         <ScrollRestoration />
         <Scripts />
