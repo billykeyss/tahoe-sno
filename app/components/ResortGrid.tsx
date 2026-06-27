@@ -25,8 +25,9 @@ interface ResortGridProps {
   featuredResorts?: string[];
 }
 
-// Tahoe Local Pass resort IDs
-const TAHOE_LOCAL_PASS_RESORTS = ['heavenly', 'northstar', 'kirkwood'];
+// Featured stations for the default landing view — Mt Rose pinned first,
+// followed by the Tahoe Local Pass resorts.
+const FEATURED_RESORTS = ['mtrose', 'heavenly', 'northstar', 'kirkwood'];
 
 const FEATURED_KEY = '__featured__';
 const ALL_KEY = '__all__';
@@ -35,7 +36,7 @@ const pad2 = (n: number) => String(n).padStart(2, '0');
 
 export function ResortGrid({
   country = 'usa',
-  featuredResorts = TAHOE_LOCAL_PASS_RESORTS,
+  featuredResorts = FEATURED_RESORTS,
 }: ResortGridProps) {
   const { resorts } = resortsConfig;
 
@@ -65,7 +66,7 @@ export function ResortGrid({
   const featuredInfo =
     country === 'canada'
       ? { title: 'Big 3 Lift Ticket', sub: 'Banff & Lake Louise' }
-      : { title: 'Tahoe Local Pass', sub: 'Season pass resorts' };
+      : { title: 'Featured', sub: 'Mt Rose & Tahoe Local Pass' };
 
   // Region filter tabs: All · <featured> · each region.
   const tabs = [
