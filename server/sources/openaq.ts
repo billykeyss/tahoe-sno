@@ -1,29 +1,28 @@
 import { fetchJson } from '../lib/http';
 import type { Sourced, AQIReading } from '../lib/types';
 
-interface OpenAQSensor {
-  id: number;
-  parameter: { name: string };
-  latest: { value: number; datetime: { utc: string } } | null;
-}
-
-interface OpenAQLocation {
-  id: number;
-  name: string;
-  sensors: OpenAQSensor[];
-}
-
-interface OpenAQResponse {
-  results: OpenAQLocation[];
+interface AirNowObservation {
+  DateObserved: string;
+  HourObserved: number;
+  ReportingArea: string;
+  ParameterName: string;
+  AQI: number;
+  Category: { Number: number; Name: string };
 }
 
 const RENO_LAT = 39.5296;
 const RENO_LON = -119.8138;
 
-const OPENAQ_URL =
-  `https://api.openaq.org/v3/locations?coordinates=${RENO_LAT},${RENO_LON}` +
-  '&radius=40000&limit=5&order_by=distance&parameters_name=pm25';
+const VALID_CATS = new Set<AQIReading['category']>([
+  'Good',
+  'Moderate',
+  'Unhealthy for Sensitive Groups',
+  'Unhealthy',
+  'Very Unhealthy',
+  'Hazardous',
+]);
 
+// Kept for tests and callers that compute category from raw PM2.5 μg/m³.
 export function pm25Category(pm25: number): AQIReading['category'] {
   if (pm25 <= 12.0) return 'Good';
   if (pm25 <= 35.4) return 'Moderate';
@@ -33,26 +32,29 @@ export function pm25Category(pm25: number): AQIReading['category'] {
   return 'Hazardous';
 }
 
-export function parseAQI(raw: OpenAQResponse): AQIReading | null {
-  for (const loc of raw.results ?? []) {
-    const sensor = (loc.sensors ?? []).find(
-      (s) => s.parameter.name === 'pm25' && s.latest != null
-    );
-    if (!sensor?.latest) continue;
-    const measuredAt = sensor.latest.datetime.utc;
-    const ageMs = Date.now() - new Date(measuredAt).getTime();
-    if (ageMs > 2 * 60 * 60 * 1000) continue; // skip readings older than 2hr
-    return {
-      pm25: sensor.latest.value,
-      category: pm25Category(sensor.latest.value),
-      stationName: loc.name,
-      measuredAt,
-    };
-  }
-  return null;
+export function parseAQI(obs: AirNowObservation[]): AQIReading | null {
+  const reading = (obs ?? []).find(
+    (o) => o.ParameterName === 'PM2.5' && typeof o.AQI === 'number' && o.AQI >= 0
+  );
+  if (!reading) return null;
+  const catName = reading.Category?.Name ?? '';
+  if (!VALID_CATS.has(catName as AQIReading['category'])) return null;
+  return {
+    pm25: reading.AQI,
+    category: catName as AQIReading['category'],
+    stationName: reading.ReportingArea ?? 'Reno',
+    measuredAt: new Date().toISOString(),
+  };
 }
 
 export async function getAQI(): Promise<Sourced<AQIReading | null>> {
-  const raw = await fetchJson<OpenAQResponse>(OPENAQ_URL, { timeoutMs: 12000 });
-  return { data: parseAQI(raw), source: 'OpenAQ', fetchedAt: new Date().toISOString() };
+  const key = process.env.AIRNOW_API_KEY;
+  if (!key) {
+    return { data: null, source: 'AirNow', fetchedAt: new Date().toISOString(), stale: true };
+  }
+  const url =
+    `https://www.airnowapi.org/aq/observation/latLong/current/` +
+    `?format=application/json&latitude=${RENO_LAT}&longitude=${RENO_LON}&distance=25&API_KEY=${key}`;
+  const raw = await fetchJson<AirNowObservation[]>(url, { timeoutMs: 12000 });
+  return { data: parseAQI(raw), source: 'AirNow', fetchedAt: new Date().toISOString() };
 }

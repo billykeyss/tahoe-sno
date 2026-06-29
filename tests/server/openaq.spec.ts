@@ -16,59 +16,47 @@ describe('pm25Category', () => {
   });
 });
 
-describe('parseAQI', () => {
-  const makeResponse = (pm25Value: number, name = 'Reno Station') => ({
-    results: [{
-      id: 1,
-      name,
-      sensors: [{
-        id: 10,
-        parameter: { name: 'pm25' },
-        latest: { value: pm25Value, datetime: { utc: new Date().toISOString() } },
-      }],
-    }],
-  });
+describe('parseAQI (AirNow format)', () => {
+  const makeObs = (aqi = 42, paramName = 'PM2.5', catName = 'Good') => [
+    {
+      DateObserved: '2026-06-29',
+      HourObserved: 14,
+      ReportingArea: 'Reno',
+      ParameterName: paramName,
+      AQI: aqi,
+      Category: { Number: 1, Name: catName },
+    },
+  ];
 
-  test('returns AQIReading for valid PM2.5 data', () => {
-    const result = parseAQI(makeResponse(8.5));
+  test('returns AQIReading for valid PM2.5 observation', () => {
+    const result = parseAQI(makeObs(42, 'PM2.5', 'Good'));
     expect(result).toMatchObject({
-      pm25: 8.5,
+      pm25: 42,
       category: 'Good',
-      stationName: 'Reno Station',
+      stationName: 'Reno',
     });
     expect(result?.measuredAt).toMatch(/^\d{4}-\d{2}-\d{2}T/);
   });
 
-  test('returns null when no results', () => {
-    expect(parseAQI({ results: [] })).toBeNull();
+  test('returns null for empty array', () => {
+    expect(parseAQI([])).toBeNull();
   });
 
-  test('skips sensors without latest reading', () => {
-    const raw = {
-      results: [{
-        id: 1,
-        name: 'Station',
-        sensors: [{ id: 10, parameter: { name: 'pm25' }, latest: null }],
-      }],
-    };
-    expect(parseAQI(raw as never)).toBeNull();
+  test('skips non-PM2.5 parameters', () => {
+    expect(parseAQI(makeObs(55, 'O3', 'Moderate'))).toBeNull();
   });
 
-  test('skips non-pm25 sensors', () => {
-    const raw = {
-      results: [{
-        id: 1,
-        name: 'Station',
-        sensors: [{ id: 10, parameter: { name: 'o3' }, latest: { value: 55, datetime: { utc: '' } } }],
-      }],
-    };
-    expect(parseAQI(raw as never)).toBeNull();
+  test('returns null for unrecognized category name', () => {
+    expect(parseAQI(makeObs(42, 'PM2.5', 'Extreme'))).toBeNull();
   });
 
-  test('returns null when reading is older than 2 hours', () => {
-    const oldTime = new Date(Date.now() - 3 * 60 * 60 * 1000).toISOString();
-    const raw = makeResponse(8.5, 'Reno Station');
-    raw.results[0].sensors[0].latest.datetime.utc = oldTime;
-    expect(parseAQI(raw)).toBeNull();
+  test('uses first PM2.5 observation when multiple params present', () => {
+    const obs = [
+      ...makeObs(55, 'O3', 'Moderate'),
+      ...makeObs(42, 'PM2.5', 'Good'),
+    ];
+    const result = parseAQI(obs);
+    expect(result?.pm25).toBe(42);
+    expect(result?.category).toBe('Good');
   });
 });

@@ -54,7 +54,7 @@ export default function RenoPage() {
       <IncidentsPanel incidents={incidents.data} />
 
       <footer className="foot">
-        <span>RENO · SPARKS · FIRES NIFC · ALERTS NWS · AIR OPENAQ · ROADS NV511</span>
+        <span>RENO · SPARKS · FIRES NIFC · ALERTS NWS · AIR AIRNOW · ROADS NV511</span>
         <span>39.5°N 119.8°W · WASHOE COUNTY · 2026</span>
       </footer>
     </main>

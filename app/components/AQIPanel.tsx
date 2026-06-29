@@ -22,7 +22,7 @@ export function AQIPanel({ aqi }: { aqi: Sourced<AQIReading | null> | null }) {
           <span className="aqi-value">{pm25.toFixed(1)}</span>
           <span className={`aqi-category ${catClass}`}>{category}</span>
         </div>
-        <div className="aqi-station">PM2.5 · {stationName} · OpenAQ</div>
+        <div className="aqi-station">AQI · {stationName} · AirNow</div>
       </div>
     </div>
   );
