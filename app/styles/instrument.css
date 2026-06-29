@@ -495,3 +495,79 @@ footer.foot {
    apart from the Open-Meteo modeled rows above. */
 .drow.cdec { box-shadow: inset 2px 0 0 var(--snow-deep); }
 .drow.cdec .metric { color: var(--snow-deep); }
+
+/* ---------- /reno PAGE PANELS ---------- */
+.fire-panel {
+  border-left-color: var(--accent);
+}
+.fire-panel .alert-tag {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+.fire-row-meta {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10.5px;
+  color: var(--ink-3);
+  letter-spacing: 0.06em;
+}
+.fire-link {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent);
+  text-decoration: none;
+  border-bottom: 1px solid var(--accent-dim);
+}
+.fire-link:hover { border-bottom-color: var(--accent); }
+
+.aqi-reading {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+.aqi-value {
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700;
+  font-size: 22px;
+  color: var(--ink);
+}
+.aqi-category {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.aqi-cat-good      { color: var(--good); }
+.aqi-cat-moderate  { color: var(--warn); }
+.aqi-cat-sensitive { color: var(--warn); }
+.aqi-cat-unhealthy { color: var(--danger); }
+.aqi-cat-very      { color: var(--danger); }
+.aqi-cat-hazardous { color: var(--danger); }
+.aqi-station {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  color: var(--ink-3);
+  letter-spacing: 0.08em;
+  margin-top: 4px;
+}
+
+.incident-row {
+  display: flex;
+  gap: 10px;
+  align-items: baseline;
+  flex-wrap: wrap;
+}
+.incident-type {
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 600;
+  font-size: 13px;
+  color: var(--ink);
+}
+.incident-type.sev-high   { color: var(--danger); }
+.incident-type.sev-medium { color: var(--warn); }
+.incident-desc {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  color: var(--ink-3);
+}

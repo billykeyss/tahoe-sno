@@ -5,6 +5,9 @@ import { getWeather } from './sources/openMeteo';
 import { getAlerts } from './sources/nws';
 import { getSnowpack } from './sources/cdec';
 import { getRoads } from './sources/caltrans';
+import { getFires } from './sources/nifc';
+import { getAQI } from './sources/openaq';
+import { getIncidents } from './sources/nevada511';
 
 const MIN = 60 * 1000;
 const cache = new TTLCache();
@@ -65,6 +68,33 @@ app.get('/api/roads', async (c) => {
     return c.json(data);
   } catch (e) {
     return c.json({ error: 'roads upstream failed', detail: String(e) }, 502);
+  }
+});
+
+app.get('/api/fires', async (c) => {
+  try {
+    const data = await cache.wrap('fires', 30 * MIN, () => getFires());
+    return c.json(data);
+  } catch (e) {
+    return c.json({ error: 'fires upstream failed', detail: String(e) }, 502);
+  }
+});
+
+app.get('/api/aqi', async (c) => {
+  try {
+    const data = await cache.wrap('aqi', 60 * MIN, () => getAQI());
+    return c.json(data);
+  } catch (e) {
+    return c.json({ error: 'aqi upstream failed', detail: String(e) }, 502);
+  }
+});
+
+app.get('/api/incidents', async (c) => {
+  try {
+    const data = await cache.wrap('incidents', 5 * MIN, () => getIncidents());
+    return c.json(data);
+  } catch (e) {
+    return c.json({ error: 'incidents upstream failed', detail: String(e) }, 502);
   }
 });
 

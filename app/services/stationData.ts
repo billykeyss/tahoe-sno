@@ -102,3 +102,41 @@ export function useAlerts(lat: number, lon: number): FetchState<Sourced<WeatherA
     `/api/alerts?lat=${lat}&lon=${lon}`
   );
 }
+
+export interface Fire {
+  name: string;
+  acres: number;
+  containment: number;
+  type: string;
+  updatedAt: string;
+  lat: number | null;
+  lon: number | null;
+}
+
+export interface AQIReading {
+  pm25: number;
+  category: 'Good' | 'Moderate' | 'Unhealthy for Sensitive Groups' | 'Unhealthy' | 'Very Unhealthy' | 'Hazardous';
+  stationName: string;
+  measuredAt: string;
+}
+
+export interface Incident {
+  type: string;
+  description: string;
+  route: string;
+  location: string;
+  severity: 'Low' | 'Medium' | 'High' | 'Unknown';
+  startTime: string;
+}
+
+export function useFires(): FetchState<Sourced<Fire[]>> {
+  return useJson<Sourced<Fire[]>>('/api/fires');
+}
+
+export function useAQI(): FetchState<Sourced<AQIReading | null>> {
+  return useJson<Sourced<AQIReading | null>>('/api/aqi');
+}
+
+export function useIncidents(): FetchState<Sourced<Incident[]>> {
+  return useJson<Sourced<Incident[]>>('/api/incidents');
+}

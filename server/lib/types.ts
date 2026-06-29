@@ -69,3 +69,29 @@ export interface RoadStatus {
   chainControls: ChainControl[];
   closures: RoadClosure[];
 }
+
+export interface Fire {
+  name: string;
+  acres: number;
+  containment: number; // 0–100
+  type: string;        // e.g. "WF" (wildfire)
+  updatedAt: string;   // ISO string
+  lat: number | null;
+  lon: number | null;
+}
+
+export interface AQIReading {
+  pm25: number;
+  category: 'Good' | 'Moderate' | 'Unhealthy for Sensitive Groups' | 'Unhealthy' | 'Very Unhealthy' | 'Hazardous';
+  stationName: string;
+  measuredAt: string; // ISO string
+}
+
+export interface Incident {
+  type: string;        // "Accident" | "Construction" | "Road Condition" | "Event"
+  description: string;
+  route: string;       // e.g. "I-80", "US-395"
+  location: string;
+  severity: 'Low' | 'Medium' | 'High' | 'Unknown';
+  startTime: string;   // ISO string
+}

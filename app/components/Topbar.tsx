@@ -29,7 +29,6 @@ function syncTime(): string {
 export function Topbar() {
   const { pathname } = useLocation();
   const onBC = pathname.startsWith('/bc');
-  const navTo = onBC ? '/' : '/bc';
   const navLabel = onBC ? '‹ CA' : 'BC ›';
 
   // Start from a deterministic value so the prerendered shell and the first
@@ -93,7 +92,10 @@ export function Topbar() {
           <span className="stat-item collapse-sm">
             <span className="stat-val mono">SYNC {time} PT</span>
           </span>
-          <Link className="topbtn" to={navTo}>
+          <Link className={`topbtn${pathname.startsWith('/reno') ? ' active' : ''}`} to="/reno">
+            RENO
+          </Link>
+          <Link className={`topbtn${pathname === '/bc' ? ' active' : ''}`} to={onBC ? '/' : '/bc'}>
             {navLabel}
           </Link>
           <button

@@ -4,4 +4,5 @@ export default [
   index('./app.tsx'),
   route('about', './routes/about.tsx'),
   route('bc', './routes/bc.tsx'),
+  route('reno', './routes/reno.tsx'),
 ] satisfies RouteConfig;
