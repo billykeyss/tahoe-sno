@@ -127,6 +127,8 @@ export interface Incident {
   location: string;
   severity: 'Low' | 'Medium' | 'High' | 'Unknown';
   startTime: string;
+  lat: number | null;
+  lon: number | null;
 }
 
 export function useFires(): FetchState<Sourced<Fire[]>> {

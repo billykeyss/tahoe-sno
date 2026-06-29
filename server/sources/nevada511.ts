@@ -17,6 +17,8 @@ export interface NvRoadsDetail {
   severity?: string;
   startDate?: string;
   locationDescription?: string;
+  latitude?: number;
+  longitude?: number;
 }
 
 const RENO_BBOX = { latMin: 39.0, latMax: 40.5, lonMin: -120.5, lonMax: -119.0 };
@@ -41,6 +43,8 @@ export function parseDetail(d: NvRoadsDetail, layer: Layer): Incident {
     location: d.locationDescription ?? '',
     severity: severityMap(d.severity),
     startTime: d.startDate ?? new Date(0).toISOString(),
+    lat: d.latitude ?? null,
+    lon: d.longitude ?? null,
   };
 }
 

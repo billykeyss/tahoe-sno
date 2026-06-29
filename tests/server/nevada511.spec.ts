@@ -24,6 +24,8 @@ describe('parseDetail', () => {
     severity: 'Minor',
     startDate: '2026-06-27T08:00:00Z',
     locationDescription: 'Reno, NV',
+    latitude: 39.5296,
+    longitude: -119.8138,
     ...overrides,
   });
 
@@ -35,6 +37,8 @@ describe('parseDetail', () => {
       route: 'I-80',
       location: 'Reno, NV',
       severity: 'Low',
+      lat: 39.5296,
+      lon: -119.8138,
     });
     expect(result.startTime).toMatch(/^\d{4}-\d{2}-\d{2}T/);
   });
@@ -53,5 +57,11 @@ describe('parseDetail', () => {
   test('defaults missing startDate to epoch', () => {
     const result = parseDetail(makeDetail({ startDate: undefined }), 'Incidents');
     expect(result.startTime).toBe(new Date(0).toISOString());
+  });
+
+  test('returns null lat/lon when coordinates missing', () => {
+    const result = parseDetail(makeDetail({ latitude: undefined, longitude: undefined }), 'Incidents');
+    expect(result.lat).toBeNull();
+    expect(result.lon).toBeNull();
   });
 });

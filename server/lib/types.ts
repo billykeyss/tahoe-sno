@@ -94,4 +94,6 @@ export interface Incident {
   location: string;
   severity: 'Low' | 'Medium' | 'High' | 'Unknown';
   startTime: string;   // ISO string
+  lat: number | null;
+  lon: number | null;
 }

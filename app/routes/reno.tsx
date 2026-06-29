@@ -2,6 +2,7 @@ import { AlertBanner } from '../components/AlertBanner';
 import { FirePanel } from '../components/FirePanel';
 import { AQIPanel } from '../components/AQIPanel';
 import { IncidentsPanel } from '../components/IncidentsPanel';
+import { RenoMap } from '../components/RenoMap';
 import { HeroHeadline } from '../components/HeroHeadline';
 import { useFires, useAQI, useIncidents, useAlerts } from '../services/stationData';
 
@@ -52,6 +53,7 @@ export default function RenoPage() {
       <AlertBanner alerts={alerts.data} />
       <AQIPanel aqi={aqi.data} />
       <IncidentsPanel incidents={incidents.data} />
+      <RenoMap fires={fires.data} incidents={incidents.data} />
 
       <footer className="foot">
         <span>RENO · SPARKS · FIRES NIFC · ALERTS NWS · AIR AIRNOW · ROADS NV511</span>
