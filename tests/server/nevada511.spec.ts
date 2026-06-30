@@ -64,4 +64,15 @@ describe('parseDetail', () => {
     expect(result.lat).toBeNull();
     expect(result.lon).toBeNull();
   });
+
+  test('strips "Start time:" suffix from description', () => {
+    const raw = 'Crash on I-80. 1 Left lane closed. Start time: 6/28/2026 6:17 AM.  End time: 7/1/2026.';
+    const result = parseDetail(makeDetail({ description: raw }), 'Incidents');
+    expect(result.description).toBe('Crash on I-80. 1 Left lane closed');
+  });
+
+  test('strips leading severity word from description', () => {
+    const result = parseDetail(makeDetail({ description: 'Minor Bridge construction on ramp from SR-430.' }), 'Incidents');
+    expect(result.description).toBe('Bridge construction on ramp from SR-430.');
+  });
 });

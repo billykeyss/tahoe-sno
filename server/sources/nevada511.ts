@@ -35,10 +35,18 @@ export function severityMap(raw: string | undefined): Incident['severity'] {
   }
 }
 
+function trimDescription(raw: string | undefined): string {
+  if (!raw) return '';
+  // Strip everything from "Start time:" onward (NV511 appends timestamps + public details)
+  const cut = raw.split(/\.\s*Start time:/i)[0].trim();
+  // Strip leading severity word that duplicates the severity field ("Minor ", "Major ")
+  return cut.replace(/^(Minor|Moderate|Major)\s+/i, '');
+}
+
 export function parseDetail(d: NvRoadsDetail, layer: Layer): Incident {
   return {
     type: layer,
-    description: d.description ?? '',
+    description: trimDescription(d.description),
     route: d.roadway ?? '',
     location: d.locationDescription ?? '',
     severity: severityMap(d.severity),

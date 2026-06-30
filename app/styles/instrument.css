@@ -603,3 +603,29 @@ footer.foot {
   font-size: 16px !important;
   padding: 4px 6px !important;
 }
+
+/* ── Incident rows (compact) ─────────────────────────────── */
+.inc-row {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  padding: 2px 0;
+}
+.inc-route {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+  flex-shrink: 0;
+  min-width: 72px;
+}
+.inc-sev-high   { color: var(--danger); }
+.inc-sev-medium { color: var(--warn); }
+.inc-sev-low    { color: var(--ink-3); }
+.inc-desc {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  color: var(--ink-2);
+  line-height: 1.45;
+}
