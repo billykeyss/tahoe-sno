@@ -77,7 +77,7 @@ export function RenoMap({ fires, incidents }: RenoMapProps) {
     try {
       map = new maplibregl.Map({
         container: containerRef.current,
-        style: 'https://tiles.openfreemap.org/styles/outdoor',
+        style: 'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json',
         center: RENO_CENTER,
         zoom: 10,
         pitch: 50,
