@@ -629,3 +629,227 @@ footer.foot {
   color: var(--ink-2);
   line-height: 1.45;
 }
+
+/* ── /reno redesign ──────────────────────────────────────── */
+
+/* Header */
+.reno-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 24px;
+  padding: 32px 0 20px;
+  flex-wrap: wrap;
+}
+.reno-eyebrow {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  color: var(--ink-3);
+  display: block;
+  margin-bottom: 8px;
+}
+.reno-h1 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: clamp(28px, 5vw, 44px);
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1;
+  margin: 0;
+}
+.reno-sep { color: var(--ink-3); margin: 0 6px; font-weight: 300; }
+.reno-sub {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  color: var(--ink-3);
+  margin-top: 10px;
+  letter-spacing: 0.04em;
+}
+
+/* Status chips */
+.reno-chips {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  flex-shrink: 0;
+}
+.reno-chip {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  background: var(--bg-grid);
+  border: 1px solid var(--line-2);
+  border-radius: 4px;
+  padding: 8px 16px;
+  min-width: 68px;
+}
+.reno-chip.chip-fire  { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 8%, var(--bg-grid)); }
+.reno-chip.chip-alert { border-color: var(--danger); background: color-mix(in srgb, var(--danger) 8%, var(--bg-grid)); }
+.chip-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.14em;
+  color: var(--ink-3);
+}
+.chip-val {
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700;
+  font-size: 20px;
+  color: var(--ink);
+  line-height: 1;
+}
+.chip-aqi { font-size: 18px; }
+
+/* Shared panel chrome */
+.reno-panel {
+  background: var(--bg-grid);
+  border: 1px solid var(--line-2);
+  border-left: 3px solid var(--line-2);
+  border-radius: 4px;
+  padding: 14px 16px;
+  margin-bottom: 10px;
+}
+.reno-panel-fire  { border-left-color: var(--accent); }
+.reno-panel-alert { border-left-color: var(--danger); }
+.reno-panel-roads { border-left-color: var(--ink-3); }
+
+.reno-panel-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+.reno-panel-tag {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9.5px;
+  letter-spacing: 0.14em;
+  font-weight: 600;
+  color: var(--ink-3);
+}
+.reno-panel-tag-fire  { color: var(--accent); }
+.reno-panel-tag-alert { color: var(--danger); }
+.reno-panel-src {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9.5px;
+  color: var(--ink-3);
+  letter-spacing: 0.06em;
+}
+.reno-link {
+  text-decoration: none;
+  color: var(--accent);
+  border-bottom: 1px solid var(--accent-dim);
+  font-size: 9.5px;
+  letter-spacing: 0.06em;
+}
+.reno-link:hover { border-bottom-color: var(--accent); }
+
+/* Fire table */
+.fire-table { display: flex; flex-direction: column; gap: 6px; }
+.fire-row {
+  display: grid;
+  grid-template-columns: 1fr auto auto auto;
+  gap: 12px;
+  align-items: baseline;
+}
+.fire-name {
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--accent);
+}
+.fire-stat {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  color: var(--ink-2);
+  white-space: nowrap;
+}
+.fire-type {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  color: var(--ink-3);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+/* AQI panel */
+.aqi-body { display: flex; align-items: center; gap: 16px; }
+.aqi-num {
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700;
+  font-size: 42px;
+  line-height: 1;
+}
+.aqi-meta { display: flex; flex-direction: column; gap: 4px; }
+.aqi-cat {
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 600;
+  font-size: 15px;
+  line-height: 1;
+}
+.aqi-unit {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  color: var(--ink-3);
+  letter-spacing: 0.08em;
+}
+
+/* Incidents grouped */
+.inc-group { margin-bottom: 12px; }
+.inc-group:last-child { margin-bottom: 0; }
+.inc-group-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+  padding-bottom: 5px;
+  border-bottom: 1px solid var(--line);
+}
+.inc-group-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.16em;
+  color: var(--ink-3);
+  font-weight: 600;
+}
+.inc-group-count {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  color: var(--ink-3);
+  background: var(--panel-2);
+  padding: 1px 5px;
+  border-radius: 2px;
+}
+.inc-row2 {
+  display: flex;
+  gap: 10px;
+  align-items: baseline;
+  padding: 3px 0;
+}
+.inc-route2 {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  font-weight: 600;
+  white-space: nowrap;
+  min-width: 90px;
+  flex-shrink: 0;
+}
+.inc-desc2 {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  color: var(--ink-2);
+  line-height: 1.45;
+}
+
+/* Panels container */
+.reno-panels { margin-top: 16px; }
+
+@media (max-width: 600px) {
+  .reno-header { flex-direction: column; align-items: flex-start; }
+  .reno-chips { width: 100%; }
+  .reno-chip { flex: 1; }
+  .fire-row { grid-template-columns: 1fr auto; }
+  .fire-type { display: none; }
+  .inc-route2 { min-width: 70px; }
+}

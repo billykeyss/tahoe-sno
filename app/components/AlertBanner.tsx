@@ -8,8 +8,11 @@ export function AlertBanner({ alerts }: { alerts: Sourced<WeatherAlert[]> | null
   if (!alerts || alerts.data.length === 0) return null;
 
   return (
-    <div className="alert-banner" role="alert">
-      <span className="alert-tag">{alerts.source}</span>
+    <div className="reno-panel reno-panel-alert" role="alert">
+      <div className="reno-panel-head">
+        <span className="reno-panel-tag reno-panel-tag-alert">ALERTS · NWS</span>
+        <span className="reno-panel-src">{alerts.data.length} active</span>
+      </div>
       <div className="alert-list">
         {alerts.data.slice(0, 3).map((a, i) => (
           <div className="alert-row" key={i}>
