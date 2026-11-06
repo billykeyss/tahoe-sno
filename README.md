@@ -1,3 +1,5 @@
+> **Archived.** TahoeSno now lives inside Sesh as [`/snow`](https://crag.billhuang.me/snow). Code: [sesh-climbing-map](https://github.com/billykeyss/sesh-climbing-map).
+
 # TahoeSno - Lake Tahoe Ski Resort Dashboard
 
 A comprehensive ski conditions dashboard for Lake Tahoe resorts with real-time weather data, avalanche conditions, and travel information.
