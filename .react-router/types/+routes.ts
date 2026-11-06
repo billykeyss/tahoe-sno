@@ -16,7 +16,13 @@ type Pages = {
   "/about": {
     params: {};
   };
+  "/resorts": {
+    params: {};
+  };
   "/bc": {
+    params: {};
+  };
+  "/reno": {
     params: {};
   };
 };
@@ -24,7 +30,7 @@ type Pages = {
 type RouteFiles = {
   "root.tsx": {
     id: "root";
-    page: "/" | "/about" | "/bc";
+    page: "/" | "/about" | "/resorts" | "/bc" | "/reno";
   };
   "./app.tsx": {
     id: "app";
@@ -34,8 +40,16 @@ type RouteFiles = {
     id: "routes/about";
     page: "/about";
   };
+  "./routes/resorts.tsx": {
+    id: "routes/resorts";
+    page: "/resorts";
+  };
   "./routes/bc.tsx": {
     id: "routes/bc";
     page: "/bc";
+  };
+  "./routes/reno.tsx": {
+    id: "routes/reno";
+    page: "/reno";
   };
 };

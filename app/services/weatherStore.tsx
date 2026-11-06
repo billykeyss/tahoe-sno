@@ -40,12 +40,23 @@ const CONCURRENCY = 5;
  */
 export function WeatherProvider({
   country,
+  priority = [],
   children,
 }: {
   country: string;
+  /** Resort ids to fetch before the rest (e.g. the home mountain). */
+  priority?: string[];
   children: ReactNode;
 }) {
-  const resorts = useMemo(() => getCountryResorts(country), [country]);
+  const priorityKey = priority.join(',');
+  const resorts = useMemo(() => {
+    const ids = priorityKey ? priorityKey.split(',') : [];
+    const rank = (r: Resort) => {
+      const i = ids.indexOf(r.id);
+      return i === -1 ? ids.length : i;
+    };
+    return [...getCountryResorts(country)].sort((a, b) => rank(a) - rank(b));
+  }, [country, priorityKey]);
   const [entries, setEntries] = useState<Record<string, WeatherEntry>>(() =>
     Object.fromEntries(resorts.map((r) => [r.id, { loading: true }]))
   );

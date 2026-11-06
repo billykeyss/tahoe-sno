@@ -8,6 +8,9 @@ import { getRoads } from './sources/caltrans';
 import { getFires } from './sources/nifc';
 import { getAQI } from './sources/openaq';
 import { getIncidents } from './sources/nevada511';
+import { getHighways } from './sources/highways';
+import { getSnotelSnowpack } from './sources/snotel';
+import { getCameras } from './sources/cameras';
 
 const MIN = 60 * 1000;
 const cache = new TTLCache();
@@ -53,8 +56,9 @@ app.get('/api/snowpack', async (c) => {
   const resortId = c.req.query('resortId');
   if (!resortId) return c.json({ error: 'resortId required' }, 400);
   try {
-    const data = await cache.wrap(`snowpack:${resortId}`, 90 * MIN, () =>
-      getSnowpack(resortId)
+    // SNOTEL where a resort has a sensor on the mountain (NV side), else CDEC.
+    const data = await cache.wrap(`snowpack:${resortId}`, 60 * MIN, async () =>
+      (await getSnotelSnowpack(resortId)) ?? (await getSnowpack(resortId))
     );
     return c.json(data ?? { data: null }); // null => no mapped station
   } catch (e) {
@@ -95,6 +99,24 @@ app.get('/api/incidents', async (c) => {
     return c.json(data);
   } catch (e) {
     return c.json({ error: 'incidents upstream failed', detail: String(e) }, 502);
+  }
+});
+
+app.get('/api/highways', async (c) => {
+  try {
+    const data = await cache.wrap('highways', 360 * MIN, () => getHighways());
+    return c.json(data);
+  } catch (e) {
+    return c.json({ error: 'highways upstream failed', detail: String(e) }, 502);
+  }
+});
+
+app.get('/api/cams', async (c) => {
+  try {
+    const data = await cache.wrap('cams', 360 * MIN, () => getCameras());
+    return c.json(data);
+  } catch (e) {
+    return c.json({ error: 'cams upstream failed', detail: String(e) }, 502);
   }
 });
 

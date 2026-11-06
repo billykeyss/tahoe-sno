@@ -1,113 +1,90 @@
-import { ResortGrid } from './components/ResortGrid';
-import { RegionReadout } from './components/RegionReadout';
-import { RoadStatus } from './components/RoadStatus';
-import { AlertBanner } from './components/AlertBanner';
-import { SnowRadar } from './components/SnowRadar';
-import { HeroHeadline } from './components/HeroHeadline';
-import { SourceTip } from './components/SourceTip';
-import { WeatherProvider } from './services/weatherStore';
+import { useMemo } from 'react';
+import { MT_ROSE } from './config/mtrose';
+import { WeatherProvider, useResortWeather } from './services/weatherStore';
 import {
-  useRoads,
   useAlerts,
-  type RoadStatusData,
-  type Sourced,
+  useCams,
+  useIncidents,
+  useRoads,
+  useSnowpack,
 } from './services/stationData';
+import { analyzePowder } from './services/powder';
+import { RoseHero } from './components/rose/RoseHero';
+import { RoseMap } from './components/rose/RoseMap';
+import { WeatherNow } from './components/rose/WeatherNow';
+import { PowderPanel } from './components/rose/PowderPanel';
+import { BasePanel } from './components/rose/BasePanel';
+import { PastSnow } from './components/rose/PastSnow';
+import { ForecastRow } from './components/rose/ForecastRow';
+import { CamsPanel } from './components/rose/CamsPanel';
+import { AccessPanel } from './components/rose/AccessPanel';
+import { CompareTable } from './components/rose/CompareTable';
 
-// Central Lake Tahoe point used for the regional NWS alert check.
-const TAHOE_POINT = { lat: 39.09, lon: -120.03 };
-
-const CHAIN_ORDER: Record<string, number> = {
-  none: 0,
-  unknown: 1,
-  R1: 2,
-  R2: 3,
-  R3: 4,
-};
-const CHAIN_LABEL: Record<string, string> = {
-  none: 'R-0',
-  unknown: '—',
-  R1: 'R-1',
-  R2: 'R-2',
-  R3: 'R-3',
-};
-
-function i80Chains(roads: Sourced<RoadStatusData> | null): {
-  code: string;
-  cls: string;
-} {
-  if (!roads) return { code: '—', cls: '' };
-  const worst = roads.data.chainControls
-    .filter((c) => c.route === 'I-80')
-    .reduce((w, c) => (CHAIN_ORDER[c.status] > CHAIN_ORDER[w] ? c.status : w), 'none');
-  return { code: CHAIN_LABEL[worst], cls: worst === 'none' ? '' : 'acc' };
-}
-
-// Homepage — "Alpine Instrument" station readout for the Lake Tahoe ski areas.
-// Global chrome (top bar, theme toggle, grid overlay) lives in app/root.tsx.
-export function App() {
+// Homepage — the Mt Rose dashboard. One mountain, every signal that decides
+// whether today is the day: new snow, what's on the ground, wind, the highway,
+// and what's coming. The rest of the Sierra lives at /resorts.
+function Dashboard() {
+  const weather = useResortWeather(MT_ROSE.id);
+  const { snowpack } = useSnowpack(MT_ROSE.id);
+  const incidents = useIncidents();
   const roads = useRoads();
-  const alerts = useAlerts(TAHOE_POINT.lat, TAHOE_POINT.lon);
+  const alerts = useAlerts(MT_ROSE.coordinates.lat, MT_ROSE.coordinates.lon);
+  const cams = useCams();
 
-  const chains = i80Chains(roads.data);
-  const alertCount = alerts.data?.data.length ?? 0;
+  const powder = useMemo(
+    () =>
+      weather.data
+        ? analyzePowder(weather.data, snowpack?.data ?? null, MT_ROSE.elevation)
+        : null,
+    [weather.data, snowpack]
+  );
 
   return (
-    <WeatherProvider country="usa">
-      <main className="wrap">
-        {/* HERO — a station readout, not a centered gradient headline */}
-        <section className="hero">
-          <div>
-            <HeroHeadline place="Tahoe" />
-            <p>
-              Hourly snow, wind and snowpack telemetry for every Sierra Nevada
-              ski area. Read the mountain before you drive the pass.
-            </p>
-          </div>
-          <RegionReadout
-            rows={[
-              {
-                label: 'Chains I-80',
-                value: (
-                  <SourceTip
-                    source="Caltrans"
-                    detail="Worst active chain control on I-80"
-                  >
-                    {chains.code}
-                  </SourceTip>
-                ),
-                cls: chains.cls,
-              },
-              {
-                label: 'NWS alerts',
-                value: (
-                  <SourceTip
-                    source="NWS"
-                    detail="Active weather alerts for the Tahoe region"
-                  >
-                    {alertCount}
-                  </SourceTip>
-                ),
-                cls: alertCount ? 'acc' : '',
-              },
-            ]}
-          />
-        </section>
+    <main className="wrap rose">
+      <RoseHero
+        weather={weather.data ?? null}
+        snowpack={snowpack?.data ?? null}
+        powder={powder}
+        incidents={incidents.data?.data ?? null}
+        alerts={alerts.data?.data ?? null}
+        loading={weather.loading}
+      />
 
-        <AlertBanner alerts={alerts.data} />
-        <RoadStatus roads={roads.data} loading={roads.loading} />
+      <RoseMap incidents={incidents.data} />
 
-        <SnowRadar />
+      <div className="rose-grid">
+        <WeatherNow weather={weather.data ?? null} />
+        <PowderPanel powder={powder} />
+        <BasePanel snowpack={snowpack} weather={weather.data ?? null} densityPct={powder?.densityPct ?? null} />
+        <PastSnow weather={weather.data ?? null} />
+      </div>
 
-        <ResortGrid />
+      <ForecastRow weather={weather.data ?? null} />
 
-        <footer className="foot">
-          <span>
-            TAHOESNO · WEATHER OPEN-METEO · SNOWPACK CDEC · ROADS CALTRANS ·
-            ALERTS NWS
-          </span>
-          <span>40.7°N 120.0°W · SIERRA NEVADA · 2026 WINTER</span>
-        </footer>
-      </main>
+      <CamsPanel cams={cams.data} />
+
+      <div className="rose-grid">
+        <AccessPanel incidents={incidents.data} roads={roads.data} alerts={alerts.data} />
+        <CompareTable />
+      </div>
+
+      <footer className="foot">
+        <span>
+          TAHOESNO · WEATHER OPEN-METEO · SNOWPACK SNOTEL · ROADS NV511 + CALTRANS ·
+          ALERTS NWS
+        </span>
+        <span>
+          {MT_ROSE.coordinates.lat.toFixed(2)}°N {Math.abs(MT_ROSE.coordinates.lon).toFixed(2)}°W · MT ROSE · 2026 WINTER
+        </span>
+      </footer>
+    </main>
+  );
+}
+
+export function App() {
+  return (
+    <WeatherProvider country="usa" priority={[MT_ROSE.id]}>
+      <Dashboard />
     </WeatherProvider>
   );
 }

@@ -11,12 +11,21 @@ export interface Sourced<T> {
   stationId?: string;
 }
 
+export interface SnowpackDay {
+  date: string;
+  depth_cm: number | null;
+  swe_cm: number | null;
+  temp_c: number | null;
+}
+
 export interface Snowpack {
   depth_cm: number | null;
   swe_cm: number | null;
   stationName: string;
   elevationFt: number;
   confidence: 'high' | 'medium' | 'low';
+  /** Daily readings, oldest first (SNOTEL stations only). */
+  history?: SnowpackDay[];
 }
 
 export interface RoadStatusData {
@@ -141,4 +150,18 @@ export function useAQI(): FetchState<Sourced<AQIReading | null>> {
 
 export function useIncidents(): FetchState<Sourced<Incident[]>> {
   return useJson<Sourced<Incident[]>>('/api/incidents');
+}
+
+export interface Camera {
+  id: string;
+  label: string;
+  location: string;
+  imageUrl: string;
+  videoUrl: string | null;
+  lat: number | null;
+  lon: number | null;
+}
+
+export function useCams(): FetchState<Sourced<Camera[]>> {
+  return useJson<Sourced<Camera[]>>('/api/cams');
 }

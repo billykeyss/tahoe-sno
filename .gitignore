@@ -57,3 +57,6 @@ vite.config.*.timestamp*
 vitest.config.*.timestamp*
 # autodeploy bookkeeping (local)
 cortex/.autodeploy_sha
+
+# Playwright MCP screenshots/snapshots
+.playwright-mcp/

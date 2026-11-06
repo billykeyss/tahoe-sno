@@ -9,8 +9,12 @@ const weather = (overrides: Partial<WeatherData> = {}): WeatherData => ({
   weather_desc: 'cloudy',
   temp_c: -2,
   wind_speed_mph: 10,
+  wind_gust_mph: 14,
+  freezing_level_m: null,
   forecast: [],
   historical_snow: [],
+  snow_history: [],
+  hourly: [],
   ...overrides,
 });
 

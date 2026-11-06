@@ -92,6 +92,9 @@ export function Topbar() {
           <span className="stat-item collapse-sm">
             <span className="stat-val mono">SYNC {time} PT</span>
           </span>
+          <Link className={`topbtn collapse-sm${pathname.startsWith('/resorts') ? ' active' : ''}`} to="/resorts">
+            RESORTS
+          </Link>
           <Link className={`topbtn${pathname.startsWith('/reno') ? ' active' : ''}`} to="/reno">
             RENO
           </Link>

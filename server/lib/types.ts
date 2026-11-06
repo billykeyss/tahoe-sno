@@ -13,9 +13,24 @@ export interface Sourced<T> {
   stale?: boolean;
 }
 
+export type Condition = 'sunny' | 'partly-cloudy' | 'cloudy' | 'snow' | 'rain';
+
+export interface HourlyPoint {
+  time: string; // local ISO hour, e.g. "2026-11-05T14:00"
+  temp_c: number;
+  snow_cm: number;
+  wind_mph: number;
+  gust_mph: number;
+  /** Freezing level above sea level, metres (null when the model has none). */
+  freezing_level_m: number | null;
+}
+
 export interface NormalizedWeather {
   temp_c: number;
   wind_speed_mph: number;
+  wind_gust_mph: number;
+  /** Current freezing level, metres ASL. */
+  freezing_level_m: number | null;
   weather_desc: string;
   freshsnow_cm: number;
   base_depth_cm: number;
@@ -25,9 +40,16 @@ export interface NormalizedWeather {
     temp_high_c: number;
     temp_low_c: number;
     freshsnow_cm: number;
-    condition: 'sunny' | 'partly-cloudy' | 'cloudy' | 'snow' | 'rain';
+    wind_mph: number;
+    gust_mph: number;
+    condition: Condition;
   }>;
+  /** Last 7 days, oldest first (kept for the resort cards). */
   historical_snow: Array<{ date: string; snow_cm: number }>;
+  /** Last 14 days, oldest first. */
+  snow_history: Array<{ date: string; snow_cm: number }>;
+  /** Next 24 hours from the current hour. */
+  hourly: HourlyPoint[];
 }
 
 export interface WeatherAlert {
@@ -36,6 +58,13 @@ export interface WeatherAlert {
   headline: string;
   onset: string | null;
   expires: string | null;
+}
+
+export interface SnowpackDay {
+  date: string; // YYYY-MM-DD
+  depth_cm: number | null;
+  swe_cm: number | null;
+  temp_c: number | null;
 }
 
 export interface Snowpack {
@@ -47,6 +76,8 @@ export interface Snowpack {
   elevationFt: number;
   /** How confident the resort→station match is. */
   confidence: 'high' | 'medium' | 'low';
+  /** Daily readings, oldest first (SNOTEL stations only). */
+  history?: SnowpackDay[];
 }
 
 export type ChainStatus = 'none' | 'R1' | 'R2' | 'R3' | 'unknown';
@@ -94,6 +125,20 @@ export interface Incident {
   location: string;
   severity: 'Low' | 'Medium' | 'High' | 'Unknown';
   startTime: string;   // ISO string
+  lat: number | null;
+  lon: number | null;
+}
+
+export interface Camera {
+  id: string;
+  /** Short display name, e.g. "Ski area entrance". */
+  label: string;
+  /** Upstream location string, e.g. "SR-431 @ Mt Rose Ski Area". */
+  location: string;
+  /** Still image, refreshed upstream about once a minute. */
+  imageUrl: string;
+  /** HLS live stream, when the upstream offers one. */
+  videoUrl: string | null;
   lat: number | null;
   lon: number | null;
 }

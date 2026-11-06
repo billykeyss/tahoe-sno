@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-type Overlay = 'radar' | 'snow';
+export type Overlay = 'radar' | 'snow';
 
 interface SnowRadarProps {
   /** Map center + zoom. Defaults to Lake Tahoe. */
@@ -11,7 +11,7 @@ interface SnowRadarProps {
   place?: string;
 }
 
-function windyUrl(
+export function windyUrl(
   overlay: Overlay,
   lat: number,
   lon: number,

@@ -9,6 +9,7 @@ import {
 } from 'react-router';
 
 import './styles/instrument.css';
+import './styles/rose.css';
 import { Topbar } from './components/Topbar';
 import { THEME_INIT_SCRIPT } from './theme-mode';
 

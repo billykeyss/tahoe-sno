@@ -10,7 +10,7 @@ export default defineConfig(() => ({
     host: 'localhost',
     proxy: {
       // In dev, forward /api to the Hono data server (`pnpm server`).
-      '/api': 'http://localhost:8787',
+      '/api': `http://localhost:${process.env.API_PORT ?? 8787}`,
     },
   },
   preview: {

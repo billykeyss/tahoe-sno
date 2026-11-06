@@ -27,6 +27,18 @@ export const SOURCES: Record<string, SourceMeta> = {
     host: 'weather.gov',
     blurb: 'National Weather Service — alerts',
   },
+  SNOTEL: {
+    label: 'SNOTEL',
+    url: 'https://wcc.sc.egov.usda.gov/snotel/',
+    host: 'wcc.sc.egov.usda.gov',
+    blurb: 'NRCS SNOTEL — snow sensor on the mountain',
+  },
+  NV511: {
+    label: 'NV511',
+    url: 'https://www.nvroads.com',
+    host: 'nvroads.com',
+    blurb: 'Nevada 511 — road incidents & highway cams',
+  },
   Caltrans: {
     label: 'Caltrans',
     url: 'https://quickmap.dot.ca.gov',

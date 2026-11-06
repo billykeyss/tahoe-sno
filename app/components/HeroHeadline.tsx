@@ -78,8 +78,16 @@ function moodFor(max24h: number): Mood {
  * Condition-aware hero headline with a random keyword + tagline, e.g.
  * "Tahoe is storming. Pick your line." or "Tahoe is sun-baked. Off-season calm."
  */
-export function HeroHeadline({ place }: { place: string }) {
-  const { max24h } = useWeatherAggregates();
+export function HeroHeadline({
+  place,
+  max24h: override,
+}: {
+  place: string;
+  /** Use this fresh-snow figure instead of the region max (single-resort pages). */
+  max24h?: number;
+}) {
+  const agg = useWeatherAggregates();
+  const max24h = override ?? agg.max24h;
 
   // Seed stays 0 for the prerender + first client render (deterministic, no
   // hydration mismatch); a real random pick lands right after mount.
